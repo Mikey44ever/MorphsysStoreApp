@@ -16,7 +16,20 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            applicationIdSuffix ".debug"
+        }
+
+        jnidebug {
+
+            // This copies the debuggable attribute and debug signing configurations.
+            initWith debug
+
+            applicationIdSuffix ".jnidebug"
+            jniDebuggable true
+        }
     }
+
 }
 
 dependencies {
@@ -26,5 +39,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.google.android.gms:play-services:11.0.1'
     testCompile 'junit:junit:4.12'
 }
