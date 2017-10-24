@@ -30,6 +30,10 @@
         <activity
             android:name=".barcode.capture.BarcodeCaptureActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
+        <activity
+            android:name=".dbs.DBCreateActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 
 </manifest>
