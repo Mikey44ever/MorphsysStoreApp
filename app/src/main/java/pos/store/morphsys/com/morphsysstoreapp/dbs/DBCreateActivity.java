@@ -30,7 +30,7 @@ public class DBCreateActivity extends AppCompatActivity {
             boolean doRefresh = getIntent().getBooleanExtra("refreshDB",false);
             //if(doRefresh)
             mydb = new DBHelper(this);
-            mydb.doDBRefresh();
+            mydb.doDBRefresh();//this line is for testing only, comment if done testing
             mydb.onCreate(new DBHelper(this).getWritableDatabase());//to make sure DBs are created
             insertRecords();
         } catch (Exception e) {
