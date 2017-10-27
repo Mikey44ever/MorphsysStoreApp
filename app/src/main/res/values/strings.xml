@@ -4,15 +4,21 @@
     <string name="no_barcode_captured">No barcode captured</string>
     <string name="barcode_error_format">"Error reading barcode: %1$s"</string>
 
+    <string name="bDate">Birth date</string>
+    <string name="branch">Branch</string>
+
     <!-- Strings related to barcode scanner -->
+    <string name="quantity">QUANTITY</string>
+    <string name="productPrice">PRICE</string>
+    <string name="productName">PRODUCT</string>
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
 
     <!--registration strings -->
-    <string name="Register">Register</string>
-    <string name="mobile">Mobile number e.g. 09071434444</string>
+    <string name="Register">Submit</string>
+    <string name="mobile">e.g. 09071434444</string>
     <string name="email">Email</string>
     <string name="firstName">First name</string>
     <string name="lastName">Last name</string>

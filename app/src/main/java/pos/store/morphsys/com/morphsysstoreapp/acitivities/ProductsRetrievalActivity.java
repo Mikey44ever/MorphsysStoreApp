@@ -1,4 +1,4 @@
-package pos.store.morphsys.com.morphsysstoreapp.api;
+package pos.store.morphsys.com.morphsysstoreapp.acitivities;
 
 import android.content.Intent;
 import android.os.AsyncTask;

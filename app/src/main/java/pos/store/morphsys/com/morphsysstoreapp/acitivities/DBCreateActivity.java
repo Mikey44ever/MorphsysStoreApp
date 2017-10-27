@@ -1,4 +1,4 @@
-package pos.store.morphsys.com.morphsysstoreapp.dbs;
+package pos.store.morphsys.com.morphsysstoreapp.acitivities;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,6 +13,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import pos.store.morphsys.com.morphsysstoreapp.dbs.DBHelper;
 
 
 /**
@@ -30,7 +32,7 @@ public class DBCreateActivity extends AppCompatActivity {
             boolean doRefresh = getIntent().getBooleanExtra("refreshDB",false);
             //if(doRefresh)
             mydb = new DBHelper(this);
-            mydb.doDBRefresh();//this line is for testing only, comment if done testing
+           // mydb.doDBRefresh();//this line is for testing only, comment if done testing
             mydb.onCreate(new DBHelper(this).getWritableDatabase());//to make sure DBs are created
             insertRecords();
         } catch (Exception e) {

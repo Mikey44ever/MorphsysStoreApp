@@ -22,6 +22,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public static final String DATABASE_NAME = "MORPHSYS.db";
     public static final String PRODUCTS_TABLE_NAME = "PRODUCTS";
     public static final String PRODUCTS_PRICE_TABLE_NAME = "PRODUCTS_PRICE";
+    public static final String USERS_TABLE = "USERS";
     private HashMap hp;
     String timeStamp = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss a").format(new Date());
 
@@ -37,7 +38,7 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL("CREATE TABLE IF NOT EXISTS PRODUCTS_PRICE('PRODUCT_PRICE_ID' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'PRODUCT_ID' text, 'PRODUCT_PRICE' NUMERIC"+
                 ",'CREATION_DATE' text, 'EFFECTIVE_DATE' text,'EXPIRATION_DATE' text)");
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS PRODUCTS_BARCODE('EAN_ID' NUMERIC PRIMARY KEY,'PRODUCT_ID' text, 'PRODUCT_BARCODE' text"+
+        db.execSQL("CREATE TABLE IF NOT EXISTS USERS('USER_ID' NUMERIC PRIMARY KEY,'USER_NAME' text, 'PASSWORD' text"+
                 ",'CREATION_DATE' text, 'EFFECTIVE_DATE' text,'EXPIRATION_DATE' text)");
     }
 
@@ -45,7 +46,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS PRODUCTS");
         db.execSQL("DROP TABLE IF EXISTS PRODUCTS_PRICE");
-        db.execSQL("DROP TABLE IF EXISTS PRODUCTS_BARCODE");
+        db.execSQL("DROP TABLE IF EXISTS USERS");
         onCreate(db);
     }
 
@@ -53,7 +54,7 @@ public class DBHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS PRODUCTS");
         db.execSQL("DROP TABLE IF EXISTS PRODUCTS_PRICE");
-        db.execSQL("DROP TABLE IF EXISTS PRODUCTS_BARCODE");
+        db.execSQL("DROP TABLE IF EXISTS USERS");
         onCreate(db);
     }
 
@@ -70,6 +71,18 @@ public class DBHelper extends SQLiteOpenHelper{
         contentValues.put("EXPIRATION_DATE", "");
         db.insert(PRODUCTS_TABLE_NAME, null, contentValues);
         return true;
+    }
+
+    public void insertUser(String username,String userId,String password){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("USER_ID", userId);
+        contentValues.put("USER_NAME", username);
+        contentValues.put("PASSWORD", password);
+        contentValues.put("CREATION_DATE", timeStamp);
+        contentValues.put("EFFECTIVE_DATE", timeStamp);
+        contentValues.put("EXPIRATION_DATE", "");
+        db.insert(USERS_TABLE, null, contentValues);
     }
 
     public boolean insertProductPrice(JsonElement details) throws Exception {
@@ -91,9 +104,20 @@ public class DBHelper extends SQLiteOpenHelper{
         return res;
     }
 
-    public Cursor getSpecificProduct(String table,String barcode) {
+    public Cursor getSpecificProduct(String table,String column,String value) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from "+table+" where BARCODE = ?", new String[]{barcode});
+        Cursor res =  db.rawQuery("select * from "+table+" where "+column+" = ?", new String[]{value});
+        return res;
+    }
+
+    public Cursor getGenericData(String query){
+        Cursor res = null;
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            res =  db.rawQuery(query, null);
+        }catch (Exception e){
+            Log.e("",e.getMessage());
+        }
         return res;
     }
 }

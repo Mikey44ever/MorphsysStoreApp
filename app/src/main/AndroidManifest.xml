@@ -19,29 +19,47 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".acitivities.LoginActivity"
+            android:theme="@style/AppTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <activity android:name=".acitivities.MainActivity">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+
         <activity
-            android:name=".barcode.capture.BarcodeCaptureActivity"
+            android:name=".acitivities.BarcodeCaptureActivity"
+            android:theme="@style/AppTheme"/>
+
+        <activity
+            android:name=".acitivities.DBCreateActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <activity
-            android:name=".dbs.DBCreateActivity"
+            android:name=".acitivities.RegistrationActivity"
+            android:theme="@style/AppTheme"/>
+
+        <activity
+            android:name=".acitivities.ProductsRetrievalActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <activity
-            android:name=".api.RegistrationActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:name=".acitivities.RegistrationMessageActivity"
+            android:theme="@style/AppTheme"/>
 
         <activity
-            android:name=".api.ProductsRetrievalActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:name=".acitivities.ViewCartActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

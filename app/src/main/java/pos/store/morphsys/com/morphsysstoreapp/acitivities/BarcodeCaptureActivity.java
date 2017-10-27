@@ -16,7 +16,7 @@
  * This file and all BarcodeXXX and CameraXXX files in this project edited by
  * Daniell Algar (included due to copyright reason)
  */
-package pos.store.morphsys.com.morphsysstoreapp.barcode.capture;
+package pos.store.morphsys.com.morphsysstoreapp.acitivities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -46,6 +46,8 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 
 import pos.store.morphsys.com.morphsysstoreapp.R;
+import pos.store.morphsys.com.morphsysstoreapp.barcode.capture.BarcodeTracker;
+import pos.store.morphsys.com.morphsysstoreapp.barcode.capture.BarcodeTrackerFactory;
 import pos.store.morphsys.com.morphsysstoreapp.camera.CameraSource;
 import pos.store.morphsys.com.morphsysstoreapp.camera.CameraSourcePreview;
 
