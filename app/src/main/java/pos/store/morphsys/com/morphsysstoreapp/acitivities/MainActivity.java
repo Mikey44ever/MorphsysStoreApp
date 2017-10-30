@@ -1,29 +1,20 @@
 package pos.store.morphsys.com.morphsysstoreapp.acitivities;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
 
 import com.google.android.gms.vision.barcode.Barcode;
 import android.graphics.Point;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.vision.text.Text;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import pos.store.morphsys.com.morphsysstoreapp.R;
 import pos.store.morphsys.com.morphsysstoreapp.dbs.DBHelper;
@@ -55,13 +46,16 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == BARCODE_READER_REQUEST_CODE) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
+                    setButtonEnabled("scan");
                     this.data=data;
                     getProductDetails();
                 }
             } else Log.e(LOG_TAG, String.format(getString(R.string.barcode_error_format),
                     CommonStatusCodes.getStatusCodeString(resultCode)));
         } else if(requestCode == VIEW_CART_REQUEST_CODE){
-            Log.i("",cartList.toArray().toString());
+            if (data != null)
+                cartList = (ArrayList<CartPOJO>)data.getSerializableExtra(CART_POJO_SERIAL_KEY);
+            setButtonEnabled("view");
         } else super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -72,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
         mydb = new DBHelper(this);
         setListeners();
-        /***resource initialization ends here**/
     }
 
     private void setListeners(){
@@ -86,9 +79,14 @@ public class MainActivity extends AppCompatActivity {
         btnViewCart = (Button) findViewById(R.id.btnViewCart);
         btnExit=(Button) findViewById(R.id.btnExit);
 
+        btnViewCart.setEnabled(false);
+        btnAddToCart.setEnabled(false);
+        btnClear.setEnabled(false);
+
         btnViewCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                data = null;
                 if(cartList.size()>0){
                     txtNoProduct.setText("");
                     Bundle bundle = new Bundle();
@@ -122,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                data = null;
                 addToCart(0);
                 Log.i(null,cartList.toArray().toString());
             }
@@ -130,10 +129,40 @@ public class MainActivity extends AppCompatActivity {
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                data = null;
+                setButtonEnabled("clear");
                 clear();
             }
         });
     }
+    private void setButtonEnabled(String activity){
+        if("scan".equalsIgnoreCase(activity)){
+            scanBarcodeButton.setEnabled(false);
+            scanBarcodeButton.setAlpha(0.2f);
+            btnAddToCart.setEnabled(true);
+            btnClear.setEnabled(true);
+        }else if("add".equalsIgnoreCase(activity)){
+            scanBarcodeButton.setEnabled(true);
+            scanBarcodeButton.setAlpha(1f);
+            btnViewCart.setEnabled(true);
+            btnAddToCart.setEnabled(false);
+            btnClear.setEnabled(false);
+        }else if("clear".equalsIgnoreCase(activity)){
+            scanBarcodeButton.setEnabled(true);
+            scanBarcodeButton.setAlpha(1f);
+            btnAddToCart.setEnabled(false);
+            btnClear.setEnabled(false);
+        }else if("view".equalsIgnoreCase(activity)){
+            txtQty.setText("");
+            txtProductName.setText("");
+            txtProductPrice.setText("");
+            scanBarcodeButton.setEnabled(true);
+            scanBarcodeButton.setAlpha(1f);
+            btnAddToCart.setEnabled(false);
+            btnClear.setEnabled(false);
+        }
+    }
+
     private void clear(){
         cart = null;
         pPOJO=null;
@@ -146,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
     private void addToCart(int qty){
         try{
             if(pPOJO!=null){
+                setButtonEnabled("add");
                 if(qty==0)
                     qty=txtQty.getText().toString().equals("") ? 1 : Integer.parseInt(txtQty.getText().toString());
 

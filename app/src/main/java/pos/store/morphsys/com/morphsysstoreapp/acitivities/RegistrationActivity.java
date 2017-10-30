@@ -11,6 +11,7 @@ import pos.store.morphsys.com.morphsysstoreapp.pojo.registration.RegistrationPOJ
 import pos.store.morphsys.com.morphsysstoreapp.pojo.registration.RegistrationPOJOBuilder;
 
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +26,9 @@ import android.widget.Toast;
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.*;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,10 +51,6 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
-/**
- * Created by MorphsysLaptop on 24/10/2017.
- */
-
 public class RegistrationActivity extends AppCompatActivity {
 
     Button registerBtn;
@@ -69,20 +69,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private int year, month, day;
     RegistrationPOJOBuilder registrationPOJOBuilder;
     RegistrationPOJO rPOJO;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(REGISTRATION_MESSAGE_REQUEST_CODE == requestCode){
-            if (resultCode == CommonStatusCodes.SUCCESS) {
-                Intent intent = new Intent();
-                intent.putExtra("userId",data.getStringExtra("userId").toString());
-                intent.putExtra("userName",txtUsername.getText().toString());
-                intent.putExtra("password",txtPassword.getText().toString());
-                setResult(CommonStatusCodes.SUCCESS, intent);
-                finish();
-            }
-        }else super.onActivityResult(requestCode, resultCode, data);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -144,7 +130,6 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void setSpinner(){
-        String[] spinners={"Morphsys","CPI","Mapfre"};//{"17","23","24"};
         ArrayAdapter<String> adapter =new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, spinners);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         branchSpinner.setAdapter(adapter);
@@ -197,9 +182,20 @@ public class RegistrationActivity extends AppCompatActivity {
             };
 
     private void callAfterAPIExecution(String result){
-        Intent intent = new Intent(getApplicationContext(), RegistrationMessageActivity.class);
-        intent.putExtra("results",result);
-        startActivityForResult(intent, REGISTRATION_MESSAGE_REQUEST_CODE);
+        JsonParser parser = new JsonParser();
+        JsonElement tradeElement = parser.parse(result);
+        JsonObject obj = tradeElement.getAsJsonObject();
+
+        String status = (obj.get("status").toString()).replaceAll("\"","");
+        String statusMsg = (obj.get("status_msg").toString()).replaceAll("\"","");
+        String userId = (obj.get("user_id").toString()).replaceAll("\"","");
+
+        Intent intent = new Intent();
+        intent.putExtra("userId",userId);
+        intent.putExtra("userName",txtUsername.getText().toString());
+        intent.putExtra("password",txtPassword.getText().toString());
+
+        showConstantDialog(RegistrationActivity.this,"REGISTRATION",statusMsg,intent,status);
     }
 
     public String getPostDataString(JSONObject params) throws Exception {

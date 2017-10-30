@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="pos.store.morphsys.com.morphsysstoreapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,28 +15,21 @@
         android:value="barcode,face" />
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/morphsys"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/morphsys"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <activity android:name=".acitivities.LoginActivity"
             android:theme="@style/AppTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".acitivities.MainActivity">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
+        <activity android:name=".acitivities.MainActivity" android:icon="@drawable/login"/>
 
         <activity
             android:name=".acitivities.BarcodeCaptureActivity"
@@ -52,10 +46,6 @@
         <activity
             android:name=".acitivities.ProductsRetrievalActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
-
-        <activity
-            android:name=".acitivities.RegistrationMessageActivity"
-            android:theme="@style/AppTheme"/>
 
         <activity
             android:name=".acitivities.ViewCartActivity"

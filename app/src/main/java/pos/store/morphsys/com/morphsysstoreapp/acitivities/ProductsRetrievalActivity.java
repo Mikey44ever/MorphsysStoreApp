@@ -23,10 +23,6 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.*;
 
-/**
- * Created by MorphsysLaptop on 25/10/2017.
- */
-
 public class ProductsRetrievalActivity  extends AppCompatActivity {
 
     private JSONArray productJSONArray = new JSONArray();

@@ -48,7 +48,6 @@ public class CartPOJO implements Serializable {
 
     @Override
     public String toString() {
-
-        return description+" : "+quantity+" x "+basePrice +" = "+(quantity*basePrice);
+        return description+"\n"+"       : "+quantity+" x "+basePrice +" = "+(quantity*basePrice);
     }
 }
