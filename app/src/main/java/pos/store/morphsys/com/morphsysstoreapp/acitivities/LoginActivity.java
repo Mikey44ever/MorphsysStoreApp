@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ButtonBarLayout;
 import android.util.Log;
@@ -65,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
             String jsonString=data.getStringExtra("products") != null ? data.getStringExtra("products") : "";
             initializeDB(true,jsonString);//true for testing only
         } else if(requestCode == MAIN_ACTIVITY_REQUEST_CODE){
-            Log.i("","success");
+            Intent intent= new Intent(LoginActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         } else super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -183,16 +186,17 @@ public class LoginActivity extends AppCompatActivity {
 
         String status = userObj.get("status").toString().replaceAll("\"","");
         String statusMsg = userObj.get("status_msg").toString().replaceAll("\"","");
-        userId = userObj.get("user_id").toString().replaceAll("\"","");
 
-        if(status.equalsIgnoreCase("FAILED"))
-            txtMessage.setText(statusMsg);
-        else{
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+        showConstantDialog(LoginActivity.this,"USER AUTHENTICATION",statusMsg,intent,status,false);
+        if(!status.equalsIgnoreCase("FAILED")){
+            userId = userObj.get("user_id").toString().replaceAll("\"","");
             txtMessage.setText("");
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("userId",userId);
             startActivityForResult(intent,MAIN_ACTIVITY_REQUEST_CODE);
         }
+
     }
 
     public class LoginAPI extends AsyncTask<String, Void, String>{
@@ -204,18 +208,23 @@ public class LoginActivity extends AppCompatActivity {
                 postDataParams.put("username", userName);
                 postDataParams.put("password", password);
 
+                JSONObject userObj = new JSONObject();
+                userObj.put("user",postDataParams);
+
                 URL url = new URL(LOGIN_URL);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000);
                 conn.setConnectTimeout(15000);
                 conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
+                conn.connect();
 
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                writer.write(getPostDataString(postDataParams));
+                writer.write(userObj.toString());
 
                 writer.flush();
                 writer.close();

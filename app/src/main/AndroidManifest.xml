@@ -50,6 +50,10 @@
         <activity
             android:name=".acitivities.ViewCartActivity"
             android:theme="@style/AppTheme"/>
+
+        <activity
+            android:name=".acitivities.CheckoutActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

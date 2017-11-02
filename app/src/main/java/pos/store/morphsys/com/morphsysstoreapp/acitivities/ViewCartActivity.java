@@ -15,6 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +44,14 @@ public class ViewCartActivity extends AppCompatActivity{
     ArrayAdapter<CartPOJO> arrayAdapter;
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==CHECKOUT_REQUEST_CODE){
+            displayMessage(data.getStringExtra("message"));
+        }else
+            super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_cart);
@@ -49,6 +60,17 @@ public class ViewCartActivity extends AppCompatActivity{
         setListeners();
         generateList();
     }
+    private void displayMessage(String message){
+        JsonParser parser = new JsonParser();
+        JsonElement tradeElement = parser.parse(message);
+        JsonObject userObj = tradeElement.getAsJsonObject().getAsJsonObject("user");
+
+        String status = userObj.get("status").toString().replaceAll("\"","");
+        String statusMsg = userObj.get("status_msg").toString().replaceAll("\"","");
+        Intent intent = new Intent();
+        showConstantDialog(ViewCartActivity.this,"CHECKOUT",statusMsg,intent,status,true);
+    }
+
     private void setListeners(){
         cartView=(ListView) findViewById(R.id.cartListView);
         btnBackToMain = (Button) findViewById(R.id.btnBackToMain);
@@ -58,40 +80,46 @@ public class ViewCartActivity extends AppCompatActivity{
         btnBackToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
 
-                Intent intent = new Intent();
-                intent.putExtras(bundle);
-                setResult(CommonStatusCodes.SUCCESS, intent);
-                finish();
+            Intent intent = new Intent();
+            intent.putExtras(bundle);
+            setResult(CommonStatusCodes.SUCCESS, intent);
+            finish();
             }
         });
 
         btnCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO checkout API
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
+
+            Intent checkoutIntent = new Intent(getApplicationContext(),CheckoutActivity.class);
+            checkoutIntent.putExtras(bundle);
+            checkoutIntent.putExtra("userId",getIntent().getStringExtra("userId"));
+            startActivityForResult(checkoutIntent,CHECKOUT_REQUEST_CODE);
             }
         });
 
         cartView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long l) {
-                AlertDialog.Builder adb = new AlertDialog.Builder(ViewCartActivity.this);
-                adb.setTitle("ITEMS");
-                final CartPOJO cPOJO = (CartPOJO) parent.getItemAtPosition(position);
-                adb.setMessage(""+cPOJO);
-                adb.setPositiveButton("OK", null);
-                adb.setNegativeButton("REMOVE ITEM", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        arrayAdapter.notifyDataSetInvalidated();
-                        cartList.remove(cPOJO);
-                        generateList();
-                    }
-                });
-                adb.show();
+            AlertDialog.Builder adb = new AlertDialog.Builder(ViewCartActivity.this);
+            adb.setTitle("ITEMS");
+            final CartPOJO cPOJO = (CartPOJO) parent.getItemAtPosition(position);
+            adb.setMessage(""+cPOJO);
+            adb.setPositiveButton("OK", null);
+            adb.setNegativeButton("REMOVE ITEM", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    arrayAdapter.notifyDataSetInvalidated();
+                    cartList.remove(cPOJO);
+                    generateList();
+                }
+            });
+            adb.show();
             }
         });
     }

@@ -2,10 +2,6 @@ package pos.store.morphsys.com.morphsysstoreapp.pojo.cart;
 
 import java.io.Serializable;
 
-/**
- * Created by MorphsysLaptop on 26/10/2017.
- */
-
 public class CartPOJO implements Serializable {
 
     private static final long serialVersionUID = -7060210544600464481L;

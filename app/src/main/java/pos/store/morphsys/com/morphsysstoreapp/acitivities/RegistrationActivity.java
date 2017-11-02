@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.*;
 
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -130,17 +129,9 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void setSpinner(){
-        ArrayAdapter<String> adapter =new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, spinners);
+        ArrayAdapter<String> adapter =new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, SPINNERS);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         branchSpinner.setAdapter(adapter);
-    }
-
-    private HashMap<String,String> getBranches(){//
-        HashMap<String,String> map = new HashMap<String,String>();
-        map.put("Morphsys","17");
-        map.put("CPI","23");
-        map.put("Mapfre","24");
-        return map;
     }
 
     private void instantiateObjects(){
@@ -195,29 +186,7 @@ public class RegistrationActivity extends AppCompatActivity {
         intent.putExtra("userName",txtUsername.getText().toString());
         intent.putExtra("password",txtPassword.getText().toString());
 
-        showConstantDialog(RegistrationActivity.this,"REGISTRATION",statusMsg,intent,status);
-    }
-
-    public String getPostDataString(JSONObject params) throws Exception {
-
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        Iterator<String> itr = params.keys();
-        while(itr.hasNext()){
-            String key= itr.next();
-            Object value = params.get(key);
-            if (first)
-                first = false;
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(key, "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(value.toString(), "UTF-8"));
-
-        }
-        return result.toString();
+        showConstantDialog(RegistrationActivity.this,"REGISTRATION",statusMsg,intent,status,true);
     }
 
     public class callRegistrationAPI extends AsyncTask<String, Void, String>{
@@ -225,6 +194,8 @@ public class RegistrationActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             try {
+                JSONObject userObj = new JSONObject();
+
                 JSONObject postDataParams = new JSONObject();
                 postDataParams.put("firstname", rPOJO.getFirstName());
                 postDataParams.put("middlename", rPOJO.getMiddleName());
@@ -236,18 +207,24 @@ public class RegistrationActivity extends AppCompatActivity {
                 postDataParams.put("branch_id", rPOJO.getBranch());
                 postDataParams.put("mobile", rPOJO.getMobileNumber());
 
+                userObj.put("user",postDataParams);
+
                 URL url = new URL(REGISTRATION_URL);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000);
                 conn.setConnectTimeout(15000);
                 conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
+                conn.connect();
+
+                String input = userObj.toString();//getPostDataString(postDataParams);
 
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                writer.write(getPostDataString(postDataParams));
+                writer.write(input);
 
                 writer.flush();
                 writer.close();

@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         btnViewCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                data = null;
                 if(cartList.size()>0){
                     txtNoProduct.setText("");
                     Bundle bundle = new Bundle();
@@ -94,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Intent cartIntent = new Intent(getApplicationContext(),ViewCartActivity.class);
                     cartIntent.putExtras(bundle);
+                    cartIntent.putExtra("userId",getIntent().getStringExtra("userId"));
                     startActivityForResult(cartIntent,VIEW_CART_REQUEST_CODE);
                 }else{
                     txtNoProduct.setText("Cart is empty");
@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                data = null;
                 addToCart(0);
                 Log.i(null,cartList.toArray().toString());
             }
@@ -129,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                data = null;
                 setButtonEnabled("clear");
                 clear();
             }
