@@ -104,6 +104,14 @@ public class DBHelper extends SQLiteOpenHelper{
         return res;
     }
 
+    public Cursor getAllProductsWithPrice() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery("SELECT DISTINCT pp.PRODUCT_ID,pp.PRODUCT_PRICE,P.PRODUCT_NAME" +
+                " FROM PRODUCTS p INNER JOIN PRODUCTS_PRICE pp" +
+                " ON p.PRODUCT_ID = pp.PRODUCT_ID ORDER BY p.PRODUCT_NAME", null);
+        return res;
+    }
+
     public Cursor getSpecificProduct(String table,String column,String value) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery("select * from "+table+" where "+column+" = ?", new String[]{value});

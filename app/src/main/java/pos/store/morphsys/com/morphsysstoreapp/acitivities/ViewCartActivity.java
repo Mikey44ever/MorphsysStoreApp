@@ -106,21 +106,21 @@ public class ViewCartActivity extends AppCompatActivity{
         cartView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long l) {
-            AlertDialog.Builder adb = new AlertDialog.Builder(ViewCartActivity.this);
-            adb.setTitle("ITEMS");
-            final CartPOJO cPOJO = (CartPOJO) parent.getItemAtPosition(position);
-            adb.setMessage(""+cPOJO);
-            adb.setPositiveButton("OK", null);
-            adb.setNegativeButton("REMOVE ITEM", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    arrayAdapter.notifyDataSetInvalidated();
-                    cartList.remove(cPOJO);
-                    generateList();
+                AlertDialog.Builder adb = new AlertDialog.Builder(ViewCartActivity.this);
+                adb.setTitle("ITEMS");
+                final CartPOJO cPOJO = (CartPOJO) parent.getItemAtPosition(position);
+                adb.setMessage(""+cPOJO);
+                adb.setPositiveButton("OK", null);
+                adb.setNegativeButton("REMOVE ITEM", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        arrayAdapter.notifyDataSetInvalidated();
+                        cartList.remove(cPOJO);
+                        generateList();
+                    }
+                });
+                    adb.show();
                 }
-            });
-            adb.show();
-            }
         });
     }
     private void computeTotal(List<CartPOJO> cartList){

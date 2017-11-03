@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 
@@ -29,6 +34,7 @@ public class Constants {
     public static final int VIEW_CART_REQUEST_CODE=7;
     public static final int MAIN_ACTIVITY_REQUEST_CODE=8;
     public static final int CHECKOUT_REQUEST_CODE = 9;
+    public static final int ALL_PRODUCTS_REQUEST_CODE=10;
 
     public static final String BARCODE="BARCODE";
     public static final String PRODUCT_ID="PRODUCT_ID";
@@ -66,5 +72,4 @@ public class Constants {
         });
         adb.show();
     }
-
 }
