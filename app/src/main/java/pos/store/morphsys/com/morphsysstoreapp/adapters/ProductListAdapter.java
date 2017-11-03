@@ -14,17 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
 import pos.store.morphsys.com.morphsysstoreapp.R;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJOBuilder;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.product.ProductPOJO;
 
-public class ProductListAdapter extends ArrayAdapter {
+public class ProductListAdapter extends ArrayAdapter{
 
-    ArrayList list = new ArrayList();
+    ArrayList<ProductPOJO> originalCopy;
+    ArrayList<ProductPOJO> list = new ArrayList<ProductPOJO>();
+    ArrayList suggestions = new ArrayList();
     private ArrayList<CartPOJO> cartList = new ArrayList<CartPOJO>();
     private CartPOJOBuilder cBuilder;
     private CartPOJO cart;
@@ -35,6 +39,7 @@ public class ProductListAdapter extends ArrayAdapter {
     public ProductListAdapter(Context context, int textViewResourceId, ArrayList objects) {
         super(context, textViewResourceId, objects);
         list = objects;
+        originalCopy = new ArrayList<>(objects);
     }
 
     public void setActivity(Activity activity){
@@ -54,10 +59,8 @@ public class ProductListAdapter extends ArrayAdapter {
         row = inflater.inflate(R.layout.product_custom_array_adapter, null);
         final TextView textView = (TextView) row.findViewById(R.id.txtProduct);
         ProductPOJO productPOJO = (ProductPOJO) list.get(position);
-        textView.setText("-> "+productPOJO.getProductName());
-
+        textView.setText(productPOJO.getProductName());
         row.setTag(productPOJO);
-
         final View hiddenRow = row;
 
         textView.setOnClickListener(new View.OnClickListener() {
@@ -90,11 +93,9 @@ public class ProductListAdapter extends ArrayAdapter {
                 txtQty.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        Log.i(null,"");
                     }
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        Log.i(null,"");
                     }
                     @Override
                     public void afterTextChanged(Editable editable) {
@@ -131,4 +132,56 @@ public class ProductListAdapter extends ArrayAdapter {
             Log.e(null,e.getMessage());
         }
     }
+
+    @NonNull
+    public Filter getFilter() {
+        return filter;
+    }
+
+    Filter filter = new Filter() {
+        @Override
+        public CharSequence convertResultToString(Object resultValue) {
+            return super.convertResultToString(resultValue);
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            FilterResults filterResults = new FilterResults();
+            final ArrayList<ProductPOJO> filterList = list;
+            if (charSequence != null && !charSequence.toString().trim().equalsIgnoreCase("")) {
+                suggestions.clear();
+                for (ProductPOJO product : filterList) {
+                    if (product.getProductName().toLowerCase().contains(charSequence.toString().toLowerCase())) {
+                        suggestions.add(product);
+                    }
+                }
+
+                filterResults.values = suggestions;
+                filterResults.count = suggestions.size();
+                return filterResults;
+            }else if(charSequence.toString().trim().equalsIgnoreCase("")){
+                suggestions.clear();
+                filterResults.values = originalCopy;
+                filterResults.count = originalCopy.size();
+                return filterResults;
+            } else {
+                return new FilterResults();
+            }
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            ArrayList<ProductPOJO> c =  (ArrayList<ProductPOJO> )filterResults.values ;
+            if (filterResults != null && filterResults.count > 0) {
+                clear();
+                for (ProductPOJO product : c) {
+                    add(product);
+                    notifyDataSetChanged();
+                }
+            } else{
+                clear();
+                notifyDataSetChanged();
+            }
+        }
+    };
 }

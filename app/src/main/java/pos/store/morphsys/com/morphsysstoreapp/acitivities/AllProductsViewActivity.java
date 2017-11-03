@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Filter;
+import android.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +17,7 @@ import android.widget.ListView;
 import com.google.android.gms.common.api.CommonStatusCodes;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import pos.store.morphsys.com.morphsysstoreapp.R;
 import pos.store.morphsys.com.morphsysstoreapp.adapters.ProductListAdapter;
@@ -27,9 +30,10 @@ import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.*;
 public class AllProductsViewActivity extends AppCompatActivity {
 
     ListView productListView;
-    ArrayList list = new ArrayList();
+    ArrayList<ProductPOJO> list = new ArrayList<ProductPOJO>();
     ProductListAdapter customProductAdapter;
     Button btnBackToMain;
+    SearchView searchView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class AllProductsViewActivity extends AppCompatActivity {
     private void setListeners(){
         productListView = (ListView) findViewById(R.id.productList);
         btnBackToMain = (Button) findViewById(R.id.btnBackToMain);
+        searchView = (SearchView) findViewById(R.id.searchView);
         ProductPOJO productPOJO = null;
         ProductPOJOBuilder pBuilder = null;
 
@@ -70,6 +75,20 @@ public class AllProductsViewActivity extends AppCompatActivity {
                 intent.putExtras(bundle);
                 setResult(CommonStatusCodes.SUCCESS, intent);
                 finish();
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                customProductAdapter.getFilter().filter(s);
+                customProductAdapter.notifyDataSetChanged();
+                return false;
             }
         });
     }
