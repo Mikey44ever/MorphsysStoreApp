@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -66,6 +67,8 @@ public class ProductListAdapter extends ArrayAdapter{
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ScrollView scroller = new ScrollView(activity);
+
                 rowProduct = (ProductPOJO)  hiddenRow.getTag();
                 View itemView = View.inflate(activity, R.layout.item_popup, null);
                 TextView txtItemName = (TextView) itemView.findViewById(R.id.txtItemName);
@@ -147,8 +150,8 @@ public class ProductListAdapter extends ArrayAdapter{
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             FilterResults filterResults = new FilterResults();
-            final ArrayList<ProductPOJO> filterList = list;
-            if (charSequence != null && !charSequence.toString().trim().equalsIgnoreCase("")) {
+            final ArrayList<ProductPOJO> filterList = new ArrayList<>(originalCopy);
+            if (charSequence != null) {
                 suggestions.clear();
                 for (ProductPOJO product : filterList) {
                     if (product.getProductName().toLowerCase().contains(charSequence.toString().toLowerCase())) {
@@ -158,11 +161,6 @@ public class ProductListAdapter extends ArrayAdapter{
 
                 filterResults.values = suggestions;
                 filterResults.count = suggestions.size();
-                return filterResults;
-            }else if(charSequence.toString().trim().equalsIgnoreCase("")){
-                suggestions.clear();
-                filterResults.values = originalCopy;
-                filterResults.count = originalCopy.size();
                 return filterResults;
             } else {
                 return new FilterResults();
