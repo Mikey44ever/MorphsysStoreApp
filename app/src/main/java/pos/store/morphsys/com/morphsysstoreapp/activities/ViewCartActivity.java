@@ -1,4 +1,4 @@
-package pos.store.morphsys.com.morphsysstoreapp.acitivities;
+package pos.store.morphsys.com.morphsysstoreapp.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,9 +20,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 

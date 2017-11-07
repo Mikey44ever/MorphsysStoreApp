@@ -1,12 +1,10 @@
-package pos.store.morphsys.com.morphsysstoreapp.acitivities;
+package pos.store.morphsys.com.morphsysstoreapp.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Filter;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +15,6 @@ import android.widget.ListView;
 import com.google.android.gms.common.api.CommonStatusCodes;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import pos.store.morphsys.com.morphsysstoreapp.R;
 import pos.store.morphsys.com.morphsysstoreapp.adapters.ProductListAdapter;

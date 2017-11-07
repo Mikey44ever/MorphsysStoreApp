@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pos.store.morphsys.com.morphsysstoreapp.acitivities.MainActivity"
+    tools:context="pos.store.morphsys.com.morphsysstoreapp.activities.MainActivity"
     android:orientation="vertical" >
 
     <Button
@@ -157,5 +157,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnDummy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dummy"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="29dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

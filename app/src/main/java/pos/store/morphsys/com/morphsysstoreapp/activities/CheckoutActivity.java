@@ -1,4 +1,4 @@
-package pos.store.morphsys.com.morphsysstoreapp.acitivities;
+package pos.store.morphsys.com.morphsysstoreapp.activities;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -37,11 +37,13 @@ public class CheckoutActivity extends AppCompatActivity{
 
     ArrayList<CartPOJO> cartList;
     String userId;
+    String cartId;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        userId = getIntent().getStringExtra("userId");
+        userId = getIntent().getStringExtra("userId")!= null ? getIntent().getStringExtra("userId") : "";
+        //cartId = getIntent().getStringExtra("cartId") != null ? getIntent().getStringExtra("cartId") : "";
         cartList = (ArrayList<CartPOJO>)getIntent().getSerializableExtra(CART_POJO_SERIAL_KEY);
         Log.i("",cartList.toString());
         new CheckOutAPICall().execute();
@@ -72,6 +74,7 @@ public class CheckoutActivity extends AppCompatActivity{
                 JSONObject cartParams = new JSONObject();
                 cartParams.put("userId",userId);
                 cartParams.put("items",itemArr);
+                cartParams.put("cartId",cartId);
 
                 JSONObject checkoutParam = new JSONObject();
                 checkoutParam.put("cart",cartParams);

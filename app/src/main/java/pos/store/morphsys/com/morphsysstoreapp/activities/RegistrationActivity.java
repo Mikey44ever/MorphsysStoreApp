@@ -1,4 +1,4 @@
-package pos.store.morphsys.com.morphsysstoreapp.acitivities;
+package pos.store.morphsys.com.morphsysstoreapp.activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -11,7 +11,6 @@ import pos.store.morphsys.com.morphsysstoreapp.pojo.registration.RegistrationPOJ
 import pos.store.morphsys.com.morphsysstoreapp.pojo.registration.RegistrationPOJOBuilder;
 
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,10 +41,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -123,7 +120,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         .setBranch(map.get(branchSpinner.getSelectedItem().toString()).toString())
                         .build();
 
-                new callRegistrationAPI().execute();
+                new CallRegistrationAPI().execute();
             }
         });
     }
@@ -189,7 +186,7 @@ public class RegistrationActivity extends AppCompatActivity {
         showConstantDialog(RegistrationActivity.this,"REGISTRATION",statusMsg,intent,status,true);
     }
 
-    public class callRegistrationAPI extends AsyncTask<String, Void, String>{
+    public class CallRegistrationAPI extends AsyncTask<String, Void, String>{
 
         @Override
         protected String doInBackground(String... strings) {

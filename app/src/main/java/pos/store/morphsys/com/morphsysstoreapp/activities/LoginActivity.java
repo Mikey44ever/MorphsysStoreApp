@@ -1,17 +1,13 @@
-package pos.store.morphsys.com.morphsysstoreapp.acitivities;
+package pos.store.morphsys.com.morphsysstoreapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ButtonBarLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,8 +30,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Iterator;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -43,16 +37,14 @@ import pos.store.morphsys.com.morphsysstoreapp.R;
 import pos.store.morphsys.com.morphsysstoreapp.dbs.DBHelper;
 
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.*;
-
-/**
- * Created by MorphsysLaptop on 25/10/2017.
- */
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Strings.*;
 
 public class LoginActivity extends AppCompatActivity {
 
     private DBHelper mydb;
     Button btnSignUp, btnSignIn, btnExit;
     TextView txtUsername, txtPassword, txtMessage;
+    Intent mainIntent;
 
     private String userName,password,userId;
 
@@ -69,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent= new Intent(LoginActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+        }else if(requestCode == DB_CREATE_REQUEST_CODE){
+
         } else super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -77,6 +71,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
 
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        mainIntent= intent;
+
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
         btnExit = (Button) findViewById(R.id.btnExit);
@@ -84,9 +81,10 @@ public class LoginActivity extends AppCompatActivity {
         txtPassword = (TextView) findViewById(R.id.txtPassword);
         txtMessage = (TextView) findViewById(R.id.txtMessage);
 
-        //initialize resources here
-        if(haveNetworkConnection()) {//check first if device is connected to the internet
+        if(haveNetworkConnection()) {
             callProductRetrievalAct();
+        }else{
+            showConstantDialog(LoginActivity.this,NOTICE.name(),NOTICE_MESSAGE,mainIntent,"",false);
         }
 
         mydb = new DBHelper(this);
@@ -115,10 +113,10 @@ public class LoginActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo[] netInfo = cm.getAllNetworkInfo();
         for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+            if (ni.getTypeName().equalsIgnoreCase(WIFI.name()))
                 if (ni.isConnected())
                     isWifiConnected = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+            if (ni.getTypeName().equalsIgnoreCase(MOBILE.name()))
                 if (ni.isConnected())
                     isMobileDataConnected = true;
         }
@@ -152,31 +150,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void performLoginCheck(String username,String password){
-        this.userName=txtUsername.getText().toString();
-        this.password=txtPassword.getText().toString();
-        new LoginAPI().execute();
-    }
-
-    public String getPostDataString(JSONObject params) throws Exception {
-
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        Iterator<String> itr = params.keys();
-        while(itr.hasNext()){
-            String key= itr.next();
-            Object value = params.get(key);
-            if (first)
-                first = false;
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(key, "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(value.toString(), "UTF-8"));
-
+        if(haveNetworkConnection()) {
+            this.userName=txtUsername.getText().toString();
+            this.password=txtPassword.getText().toString();
+            new LoginAPI().execute();
+        }else{
+            showConstantDialog(LoginActivity.this,NOTICE.name(),NOTICE_MESSAGE,mainIntent,"",false);
         }
-        return result.toString();
     }
 
     public void callAfterLoginAPI(String message){
@@ -187,14 +167,12 @@ public class LoginActivity extends AppCompatActivity {
         String status = userObj.get("status").toString().replaceAll("\"","");
         String statusMsg = userObj.get("status_msg").toString().replaceAll("\"","");
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-
-        showConstantDialog(LoginActivity.this,"USER AUTHENTICATION",statusMsg,intent,status,false);
+        showConstantDialog(LoginActivity.this,"USER AUTHENTICATION",statusMsg,mainIntent,status,false);
         if(!status.equalsIgnoreCase("FAILED")){
             userId = userObj.get("user_id").toString().replaceAll("\"","");
             txtMessage.setText("");
-            intent.putExtra("userId",userId);
-            startActivityForResult(intent,MAIN_ACTIVITY_REQUEST_CODE);
+            mainIntent.putExtra("userId",userId);
+            startActivityForResult(mainIntent,MAIN_ACTIVITY_REQUEST_CODE);
         }
 
     }

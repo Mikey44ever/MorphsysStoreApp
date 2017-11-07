@@ -1,4 +1,4 @@
-package pos.store.morphsys.com.morphsysstoreapp.acitivities;
+package pos.store.morphsys.com.morphsysstoreapp.activities;
 
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private DBHelper mydb;
     private TextView txtProductName, txtProductPrice, txtQty, txtNoProduct;
-    private Button scanBarcodeButton, btnAddToCart, btnClear, btnViewCart, btnExit, btnProductList;
+    private Button scanBarcodeButton, btnAddToCart, btnClear, btnViewCart, btnExit, btnProductList,
+    btnDummy;
     private Barcode barcode;
     private Intent data;
     private CartPOJOBuilder cBuilder;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         btnViewCart = (Button) findViewById(R.id.btnViewCart);
         btnExit=(Button) findViewById(R.id.btnExit);
         btnProductList = (Button) findViewById(R.id.btnProductList);
+        btnDummy = (Button) findViewById(R.id.btnDummy);
 
         btnViewCart.setEnabled(false);
         btnAddToCart.setEnabled(false);
@@ -143,6 +145,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent productListIntent = new Intent(getApplicationContext(),AllProductsViewActivity.class);
                 startActivityForResult(productListIntent,ALL_PRODUCTS_REQUEST_CODE);
+            }
+        });
+
+        btnDummy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cartsIntent = new Intent(getApplicationContext(),ViewAllCartsActivity.class);
+                cartsIntent.putExtra("userId",getIntent().getStringExtra("userId"));
+                startActivityForResult(cartsIntent,ALL_CARTS_REQUEST_CODE);
             }
         });
     }

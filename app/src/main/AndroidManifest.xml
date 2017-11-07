@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".acitivities.LoginActivity"
+        <activity android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,34 +29,38 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".acitivities.MainActivity" android:icon="@drawable/login"/>
+        <activity android:name=".activities.MainActivity" android:icon="@drawable/login"/>
 
         <activity
-            android:name=".acitivities.BarcodeCaptureActivity"
+            android:name=".activities.BarcodeCaptureActivity"
             android:theme="@style/AppTheme"/>
 
         <activity
-            android:name=".acitivities.DBCreateActivity"
+            android:name=".activities.DBCreateActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <activity
-            android:name=".acitivities.RegistrationActivity"
+            android:name=".activities.RegistrationActivity"
             android:theme="@style/AppTheme"/>
 
         <activity
-            android:name=".acitivities.ProductsRetrievalActivity"
+            android:name=".activities.ProductsRetrievalActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <activity
-            android:name=".acitivities.ViewCartActivity"
+            android:name=".activities.ViewCartActivity"
             android:theme="@style/AppTheme"/>
 
         <activity
-            android:name=".acitivities.CheckoutActivity"
+            android:name=".activities.CheckoutActivity"
             android:theme="@style/AppTheme"/>
 
         <activity
-            android:name=".acitivities.AllProductsViewActivity"
+            android:name=".activities.AllProductsViewActivity"
+            android:theme="@style/AppTheme"/>
+
+        <activity
+            android:name=".activities.ViewAllCartsActivity"
             android:theme="@style/AppTheme"/>
     </application>
 

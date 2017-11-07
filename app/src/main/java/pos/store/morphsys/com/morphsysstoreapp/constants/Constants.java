@@ -22,8 +22,11 @@ public class Constants {
     public static final String PRODUCTS_URL = "http://morphsys.com.ph/store/getitemsonline";//"http://morphsys.com.ph/store/getitems.php";
     public static final String LOGIN_URL = "http://morphsys.com.ph/store/login";//http://morphsys.com.ph/store/index.php?route=common/login";
     public static final String CHECKOUT_URL ="http://morphsys.com.ph/store/checkout";//http://morphsys.com.ph/store/index.php?route=account/cart/checkoutcart";
+    public static final String CARTS_URL = "http://morphsys.com.ph/store/getcartsonline";
+    public static final String CART_URL = "http://morphsys.com.ph/store/getcartdetails";
 
     public static final String CART_POJO_SERIAL_KEY="pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO";
+    public static final String CART_LIST_POJO_SERIAL_KEY = "pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartListPOJO";
 
     public static final int BARCODE_READER_REQUEST_CODE = 1;
     public static final int DB_CREATE_REQUEST_CODE = 2;
@@ -35,6 +38,7 @@ public class Constants {
     public static final int MAIN_ACTIVITY_REQUEST_CODE=8;
     public static final int CHECKOUT_REQUEST_CODE = 9;
     public static final int ALL_PRODUCTS_REQUEST_CODE=10;
+    public static final int ALL_CARTS_REQUEST_CODE=11;
 
     public static final String BARCODE="BARCODE";
     public static final String PRODUCT_ID="PRODUCT_ID";
@@ -47,6 +51,8 @@ public class Constants {
     public static final String WHERE = " WHERE";
     public static final String ORDER_BY= " ORDER BY";
     public static final String DESC = " DESC";
+
+    public static final String NOTICE_MESSAGE = "You're not connected to the internet!";
 
     public static final HashMap<String,String> getBranches(){//
         HashMap<String,String> map = new HashMap<String,String>();
