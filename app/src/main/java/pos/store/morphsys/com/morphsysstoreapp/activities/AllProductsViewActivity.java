@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +31,7 @@ public class AllProductsViewActivity extends AppCompatActivity {
     ListView productListView;
     ArrayList<ProductPOJO> list = new ArrayList<ProductPOJO>();
     ProductListAdapter customProductAdapter;
-    Button btnBackToMain;
+    ImageButton imgBtnBack;
     SearchView searchView;
 
     @Override
@@ -42,10 +44,13 @@ public class AllProductsViewActivity extends AppCompatActivity {
 
     private void setListeners(){
         productListView = (ListView) findViewById(R.id.productList);
-        btnBackToMain = (Button) findViewById(R.id.btnBackToMain);
+        imgBtnBack = (ImageButton) findViewById(R.id.imgBtnBack);
         searchView = (SearchView) findViewById(R.id.searchView);
         ProductPOJO productPOJO = null;
         ProductPOJOBuilder pBuilder = null;
+
+        searchView.setIconified(false);
+        searchView.setQueryHint("Search Item here...");
 
         Cursor products = getAllData();
         while (products.moveToNext()) {
@@ -62,7 +67,7 @@ public class AllProductsViewActivity extends AppCompatActivity {
         customProductAdapter.setActivity(AllProductsViewActivity.this);
         productListView.setAdapter(customProductAdapter);
 
-        btnBackToMain.setOnClickListener(new View.OnClickListener() {
+        imgBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
@@ -70,15 +75,10 @@ public class AllProductsViewActivity extends AppCompatActivity {
 
                 Intent intent = new Intent();
                 intent.putExtras(bundle);
+                intent.putExtra("userId",getIntent().getStringExtra("userId"));
+                intent.putExtra("cartId",getIntent().getStringExtra("cartId"));
                 setResult(CommonStatusCodes.SUCCESS, intent);
                 finish();
-            }
-        });
-
-        searchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchView.setIconified(false);
             }
         });
 

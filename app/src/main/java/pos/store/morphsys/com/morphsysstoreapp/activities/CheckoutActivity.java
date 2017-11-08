@@ -38,12 +38,14 @@ public class CheckoutActivity extends AppCompatActivity{
     ArrayList<CartPOJO> cartList;
     String userId;
     String cartId;
+    boolean isFromUpdate;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         userId = getIntent().getStringExtra("userId")!= null ? getIntent().getStringExtra("userId") : "";
-        //cartId = getIntent().getStringExtra("cartId") != null ? getIntent().getStringExtra("cartId") : "";
+        cartId = getIntent().getStringExtra("cartId") != null ? getIntent().getStringExtra("cartId") : "";
+        isFromUpdate = getIntent().getBooleanExtra("isFromUpdate",false);
         cartList = (ArrayList<CartPOJO>)getIntent().getSerializableExtra(CART_POJO_SERIAL_KEY);
         Log.i("",cartList.toString());
         new CheckOutAPICall().execute();
@@ -52,6 +54,7 @@ public class CheckoutActivity extends AppCompatActivity{
     public void callAfterAPIExecution(String message){
         Intent intent = new Intent();
         intent.putExtra("message",message);
+        intent.putExtra("isFromUpdate",isFromUpdate);
         setResult(CommonStatusCodes.SUCCESS, intent);
         finish();
     }
@@ -73,6 +76,7 @@ public class CheckoutActivity extends AppCompatActivity{
 
                 JSONObject cartParams = new JSONObject();
                 cartParams.put("userId",userId);
+                cartParams.put("cartId",cartId);
                 cartParams.put("items",itemArr);
                 cartParams.put("cartId",cartId);
 

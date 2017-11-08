@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private ProductPOJO pPOJO;
     private CartPOJO cart;
     private ArrayList<CartPOJO> cartList = new ArrayList<CartPOJO>();
+    private boolean isFromUpdate;
+    private String cartId,userId;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -71,6 +73,13 @@ public class MainActivity extends AppCompatActivity {
 
         mydb = new DBHelper(this);
         setListeners();
+
+        isFromUpdate = getIntent().getBooleanExtra("isFromUpdate",false);
+        if(isFromUpdate){}
+            cartList =(ArrayList<CartPOJO>) getIntent().getSerializableExtra(CART_POJO_SERIAL_KEY);
+
+        userId = getIntent().getStringExtra("userId");
+        cartId = getIntent().getStringExtra("cartId") != null ? getIntent().getStringExtra("cartId") : "";
     }
 
     private void setListeners(){
@@ -101,7 +110,13 @@ public class MainActivity extends AppCompatActivity {
                     Intent cartIntent = new Intent(getApplicationContext(),ViewCartActivity.class);
                     cartIntent.putExtras(bundle);
                     cartIntent.putExtra("userId",getIntent().getStringExtra("userId"));
-                    startActivityForResult(cartIntent,VIEW_CART_REQUEST_CODE);
+                    cartIntent.putExtra("cartId",getIntent().getStringExtra("cartId"));
+                    cartIntent.putExtra("isFromUpdate",isFromUpdate);
+                    if(!isFromUpdate){
+                        startActivityForResult(cartIntent,VIEW_CART_REQUEST_CODE);
+                    }else{
+                        startActivityForResult(cartIntent,SCAN_FOR_UPDATE_REQUEST_CODE);
+                    }
                 }else{
                     txtNoProduct.setText("Cart is empty");
                 }
@@ -120,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 txtNoProduct.setText("");
                 Intent intent = new Intent(getApplicationContext(), BarcodeCaptureActivity.class);
+                intent.putExtra("userId",getIntent().getStringExtra("userId"));
+                intent.putExtra("cartId",getIntent().getStringExtra("cartId"));
                 startActivityForResult(intent, BARCODE_READER_REQUEST_CODE);
             }
         });
@@ -144,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent productListIntent = new Intent(getApplicationContext(),AllProductsViewActivity.class);
+                productListIntent.putExtra("userId",getIntent().getStringExtra("userId"));
+                productListIntent.putExtra("cartId",getIntent().getStringExtra("cartId"));
                 startActivityForResult(productListIntent,ALL_PRODUCTS_REQUEST_CODE);
             }
         });

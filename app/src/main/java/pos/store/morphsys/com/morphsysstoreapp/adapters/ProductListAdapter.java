@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class ProductListAdapter extends ArrayAdapter{
                 rowProduct = (ProductPOJO)  hiddenRow.getTag();
                 View itemView = View.inflate(activity, R.layout.item_popup, null);
                 TextView txtItemName = (TextView) itemView.findViewById(R.id.txtItemName);
-                TextView txtPrice = (TextView) itemView.findViewById(R.id.txtPrice);
+                TextView txtPrice = (TextView) itemView.findViewById(R.id.txtPriceQty);
                 txtQty = (TextView) itemView.findViewById(R.id.txtQty);
 
                 txtItemName.setText(rowProduct.getProductName());

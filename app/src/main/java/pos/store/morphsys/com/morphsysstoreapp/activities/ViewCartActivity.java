@@ -39,11 +39,15 @@ public class ViewCartActivity extends AppCompatActivity{
     TextView txtTotal;
     ArrayList<CartPOJO> cartList;
     ArrayAdapter<CartPOJO> arrayAdapter;
+    private String cartId;
+    private boolean isFromUpdate;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==CHECKOUT_REQUEST_CODE){
             displayMessage(data.getStringExtra("message"));
+        }else if(requestCode==MAIN_ACTIVITY_REQUEST_CODE){
+
         }else
             super.onActivityResult(requestCode, resultCode, data);
     }
@@ -53,6 +57,8 @@ public class ViewCartActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_cart);
         cartList = (ArrayList<CartPOJO>)getIntent().getSerializableExtra(CART_POJO_SERIAL_KEY);
+        cartId = getIntent().getStringExtra("cartId") != null ? getIntent().getStringExtra("cartId"):"";
+        isFromUpdate = getIntent().getBooleanExtra("isFromUpdate",false);
 
         setListeners();
         generateList();
@@ -77,13 +83,25 @@ public class ViewCartActivity extends AppCompatActivity{
         btnBackToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
+                if(!isFromUpdate){
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
 
-            Intent intent = new Intent();
-            intent.putExtras(bundle);
-            setResult(CommonStatusCodes.SUCCESS, intent);
-            finish();
+                    Intent intent = new Intent();
+                    intent.putExtras(bundle);
+                    setResult(CommonStatusCodes.SUCCESS, intent);
+                    finish();
+                }else{
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
+
+                    Intent scanIntent = new Intent(getApplicationContext(),MainActivity.class);
+                    scanIntent.putExtra("isFromUpdate",isFromUpdate);
+                    scanIntent.putExtra("cartId",cartId);
+                    scanIntent.putExtra("userId",getIntent().getStringExtra("userId"));
+                    scanIntent.putExtras(bundle);
+                    startActivityForResult(scanIntent,SCAN_FOR_UPDATE_REQUEST_CODE);
+                }
             }
         });
 
@@ -96,6 +114,8 @@ public class ViewCartActivity extends AppCompatActivity{
             Intent checkoutIntent = new Intent(getApplicationContext(),CheckoutActivity.class);
             checkoutIntent.putExtras(bundle);
             checkoutIntent.putExtra("userId",getIntent().getStringExtra("userId"));
+            checkoutIntent.putExtra("isFromUpdate",isFromUpdate);
+            checkoutIntent.putExtra("cartId",cartId);
             startActivityForResult(checkoutIntent,CHECKOUT_REQUEST_CODE);
             }
         });

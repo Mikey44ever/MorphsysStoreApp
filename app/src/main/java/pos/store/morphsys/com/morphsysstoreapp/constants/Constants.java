@@ -39,6 +39,8 @@ public class Constants {
     public static final int CHECKOUT_REQUEST_CODE = 9;
     public static final int ALL_PRODUCTS_REQUEST_CODE=10;
     public static final int ALL_CARTS_REQUEST_CODE=11;
+    public static final int SPECIFIC_CART_ITEMS_REQUEST_CODE=12;
+    public static final int SCAN_FOR_UPDATE_REQUEST_CODE=13;
 
     public static final String BARCODE="BARCODE";
     public static final String PRODUCT_ID="PRODUCT_ID";
@@ -78,4 +80,11 @@ public class Constants {
         });
         adb.show();
     }
+
+    public static String getPkg(Class klass,String className){
+        String pkgName="";
+        pkgName=klass.getPackage().getName()+"."+className;
+        return pkgName;
+    }
+
 }

@@ -81,6 +81,9 @@ public class LoginActivity extends AppCompatActivity {
         txtPassword = (TextView) findViewById(R.id.txtPassword);
         txtMessage = (TextView) findViewById(R.id.txtMessage);
 
+        txtUsername.setText("Uu");
+        txtPassword.setText("uu");
+
         if(haveNetworkConnection()) {
             callProductRetrievalAct();
         }else{
