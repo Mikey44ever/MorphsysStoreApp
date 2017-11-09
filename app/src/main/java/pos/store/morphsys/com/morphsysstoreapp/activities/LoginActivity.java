@@ -168,10 +168,14 @@ public class LoginActivity extends AppCompatActivity {
 
         String status = userObj.get("status").toString().replaceAll("\"","");
         String statusMsg = userObj.get("status_msg").toString().replaceAll("\"","");
+        String fName = userObj.get("firstname").toString().replaceAll("\"","");
+        String lName = userObj.get("lastname").toString().replaceAll("\"","");
 
         showConstantDialog(LoginActivity.this,"USER AUTHENTICATION",statusMsg,mainIntent,status,false);
         if(!status.equalsIgnoreCase("FAILED")){
             userId = userObj.get("user_id").toString().replaceAll("\"","");
+            mainIntent.putExtra("fName",fName);
+            mainIntent.putExtra("lName",lName);
             mainIntent.putExtra("userId",userId);
             startActivityForResult(mainIntent,MAIN_DRAWER_ACTIVITY_REQUEST_CODE);
         }

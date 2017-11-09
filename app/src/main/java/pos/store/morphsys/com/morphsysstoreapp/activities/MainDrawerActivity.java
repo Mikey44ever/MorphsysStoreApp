@@ -97,7 +97,7 @@ public class MainDrawerActivity extends AppCompatActivity {
     }
 
     private void loadNavHeader() {
-        txtName.setText("Ravi Tamada");
+        txtName.setText(getIntent().getStringExtra("fName")+" "+getIntent().getStringExtra("lName"));
         txtWebsite.setText("www.androidhive.info");
 
         Glide.with(this).load(urlNavHeaderBg)
