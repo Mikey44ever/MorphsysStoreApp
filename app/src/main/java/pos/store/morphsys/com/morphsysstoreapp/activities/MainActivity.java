@@ -8,6 +8,7 @@ import android.content.Intent;
 import com.google.android.gms.vision.barcode.Barcode;
 import android.graphics.Point;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -67,15 +68,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
+            bundle.putString("userId",userId);
+
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mydb = new DBHelper(this);
         setListeners();
 
         isFromUpdate = getIntent().getBooleanExtra("isFromUpdate",false);
-        if(isFromUpdate){}
+        if(isFromUpdate)
             cartList =(ArrayList<CartPOJO>) getIntent().getSerializableExtra(CART_POJO_SERIAL_KEY);
 
         userId = getIntent().getStringExtra("userId");
@@ -157,24 +177,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnProductList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent productListIntent = new Intent(getApplicationContext(),AllProductsViewActivity.class);
-                productListIntent.putExtra("userId",getIntent().getStringExtra("userId"));
-                productListIntent.putExtra("cartId",getIntent().getStringExtra("cartId"));
-                startActivityForResult(productListIntent,ALL_PRODUCTS_REQUEST_CODE);
-            }
-        });
-
-        btnDummy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cartsIntent = new Intent(getApplicationContext(),ViewAllCartsActivity.class);
-                cartsIntent.putExtra("userId",getIntent().getStringExtra("userId"));
-                startActivityForResult(cartsIntent,ALL_CARTS_REQUEST_CODE);
-            }
-        });
     }
     private void setButtonEnabled(String activity){
         if("scan".equalsIgnoreCase(activity)){
@@ -262,6 +264,5 @@ public class MainActivity extends AppCompatActivity {
         }
         txtProductName.setText(pPOJO.getProductName());
         txtProductPrice.setText(new Double(pPOJO.getProductPrice()).toString());
-        Log.i("pojo",pPOJO.toString());
     }
 }

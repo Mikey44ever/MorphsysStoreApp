@@ -15,11 +15,10 @@
         android:value="barcode,face" />
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/morphsys"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/morphsys"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/AppTheme">
 
         <activity android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme">
@@ -28,8 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activities.MainActivity" android:icon="@drawable/login"/>
 
         <activity
             android:name=".activities.BarcodeCaptureActivity"
@@ -56,16 +53,22 @@
             android:theme="@style/AppTheme"/>
 
         <activity
-            android:name=".activities.AllProductsViewActivity"
-            android:theme="@style/AppTheme"/>
-
-        <activity
-            android:name=".activities.ViewAllCartsActivity"
-            android:theme="@style/AppTheme"/>
-
-        <activity
             android:name=".activities.ViewSpecificCartActivity"
             android:theme="@style/AppTheme"/>
+
+        <activity
+            android:name=".activities.MainDrawerActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activities.AboutUsActivity"
+            android:label="@string/activity_title_about_us" />
+        <activity
+            android:name=".activities.PrivacyPolicyActivity"
+            android:label="@string/activity_title_privacy_policy"/>
+
+        <activity android:name=".activities.MainActivity"/>
     </application>
 
 </manifest>

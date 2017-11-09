@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private DBHelper mydb;
     Button btnSignUp, btnSignIn, btnExit;
-    TextView txtUsername, txtPassword, txtMessage;
+    TextView txtUsername, txtPassword;
     Intent mainIntent;
 
     private String userName,password,userId;
@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if(requestCode == PRODUCT_RETRIEVAL_REQUEST_CODE){
             String jsonString=data.getStringExtra("products") != null ? data.getStringExtra("products") : "";
             initializeDB(true,jsonString);//true for testing only
-        } else if(requestCode == MAIN_ACTIVITY_REQUEST_CODE){
+        } else if(requestCode == MAIN_DRAWER_ACTIVITY_REQUEST_CODE){
             Intent intent= new Intent(LoginActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainDrawerActivity.class);
         mainIntent= intent;
 
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
@@ -79,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
         btnExit = (Button) findViewById(R.id.btnExit);
         txtUsername = (TextView) findViewById(R.id.txtUsername);
         txtPassword = (TextView) findViewById(R.id.txtPassword);
-        txtMessage = (TextView) findViewById(R.id.txtMessage);
 
         txtUsername.setText("Uu");
         txtPassword.setText("uu");
@@ -173,9 +172,8 @@ public class LoginActivity extends AppCompatActivity {
         showConstantDialog(LoginActivity.this,"USER AUTHENTICATION",statusMsg,mainIntent,status,false);
         if(!status.equalsIgnoreCase("FAILED")){
             userId = userObj.get("user_id").toString().replaceAll("\"","");
-            txtMessage.setText("");
             mainIntent.putExtra("userId",userId);
-            startActivityForResult(mainIntent,MAIN_ACTIVITY_REQUEST_CODE);
+            startActivityForResult(mainIntent,MAIN_DRAWER_ACTIVITY_REQUEST_CODE);
         }
 
     }

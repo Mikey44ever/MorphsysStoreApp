@@ -1,16 +1,14 @@
-package pos.store.morphsys.com.morphsysstoreapp.activities;
+package pos.store.morphsys.com.morphsysstoreapp.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -18,7 +16,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.j256.ormlite.stmt.query.In;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,39 +35,67 @@ import java.util.ArrayList;
 import javax.net.ssl.HttpsURLConnection;
 
 import pos.store.morphsys.com.morphsysstoreapp.R;
-import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
-import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJOBuilder;
+import pos.store.morphsys.com.morphsysstoreapp.activities.ViewSpecificCartActivity;
 import pos.store.morphsys.com.morphsysstoreapp.adapters.CartListAdapter;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartListPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartListPOJOBuilder;
+import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
+import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJOBuilder;
 
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.*;
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CARTS_URL;
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CART_POJO_SERIAL_KEY;
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CART_URL;
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.SPECIFIC_CART_ITEMS_REQUEST_CODE;
 
-public class ViewAllCartsActivity extends AppCompatActivity {
+public class CartListFragment extends Fragment {
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-    ListView allCartsView;
-    CartListAdapter customCartAdapter;
-    ArrayList<CartListPOJO> list;
-    ArrayList<CartPOJO> cartItemList;
-    String userId;
-    CartListPOJOBuilder cListBuilder;
-    CartPOJOBuilder cartPOJOBuilder;
-    CartPOJO cartPOJO;
-    CartListPOJO cartList;
+    private String mParam1;
+    private String mParam2;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.all_carts_list);
+    private ListView allCartsView;
+    private CartListAdapter customCartAdapter;
+    private ArrayList<CartListPOJO> list;
+    private ArrayList<CartPOJO> cartItemList;
+    private String userId;
+    private CartListPOJOBuilder cListBuilder;
+    private CartPOJOBuilder cartPOJOBuilder;
+    private CartPOJO cartPOJO;
+    private CartListPOJO cartList;
 
-        userId = getIntent().getStringExtra("userId");
-        setListeners();
+    private OnFragmentInteractionListener mListener;
 
-        new AllCartsRetrievalAPICall().execute();
+    public static CartListFragment newInstance(String param1, String param2) {
+        CartListFragment fragment = new CartListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    private void setListeners() {
-        allCartsView = (ListView) findViewById(R.id.allCartsView);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view= inflater.inflate(R.layout.fragment_cart_list, container, false);
+        setListeners(view);
+        return view;
+    }
+
+    private void setListeners(View view){
+        userId = getActivity().getIntent().getStringExtra("userId");
+        allCartsView = (ListView) view.findViewById(R.id.allCartsView);
+        new AllCartsRetrievalAPICall().execute();
     }
 
     public void setList(String message){
@@ -93,8 +118,8 @@ public class ViewAllCartsActivity extends AppCompatActivity {
 
             list.add(cartList);
         }
-        customCartAdapter = new CartListAdapter(ViewAllCartsActivity.this,R.layout.carts_custom_array_adapter, list);
-        customCartAdapter.setActivity(ViewAllCartsActivity.this);
+        customCartAdapter = new CartListAdapter(getActivity(),R.layout.carts_custom_array_adapter, list);
+        customCartAdapter.setActivity(getActivity());
         allCartsView.setAdapter(customCartAdapter);
 
         allCartsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -132,78 +157,35 @@ public class ViewAllCartsActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(CART_POJO_SERIAL_KEY,cartItemList);
-        Intent cartItemsIntent = new Intent(getApplicationContext(),ViewSpecificCartActivity.class);
+        Intent cartItemsIntent = new Intent(getActivity().getApplicationContext(),ViewSpecificCartActivity.class);
         cartItemsIntent.putExtras(bundle);
         cartItemsIntent.putExtra("cartId",cartId);
         cartItemsIntent.putExtra("status",status);
         cartItemsIntent.putExtra("date",date);
-        cartItemsIntent.putExtra("userId",getIntent().getStringExtra("userId"));
+        cartItemsIntent.putExtra("userId",getActivity().getIntent().getStringExtra("userId"));
         startActivityForResult(cartItemsIntent,SPECIFIC_CART_ITEMS_REQUEST_CODE);
     }
 
-    public class AllCartsRetrievalAPICall extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            try{
-                JSONObject userObj = new JSONObject();
-                userObj.put("userId",userId);
-
-                URL url = new URL(CARTS_URL);
-
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(15000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.connect();
-
-                String input = userObj.toString();
-
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                writer.write(input);
-
-                writer.flush();
-                writer.close();
-                os.close();
-
-                int responseCode=conn.getResponseCode();
-                if (responseCode == HttpsURLConnection.HTTP_OK) {
-                    BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-                    StringBuffer sb = new StringBuffer("");
-                    String line="";
-                    while((line = in.readLine()) != null) {
-                        sb.append(line);
-                        break;
-                    }
-                    in.close();
-                    return sb.toString();
-
-                } else {
-                    return new String("false : "+responseCode);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (ProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
         }
+    }
 
-        @Override
-        protected void onPostExecute(String s) {
-            setList(s);
-        }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 
     public class SpecificCartsRetrievalAPICall extends AsyncTask<String, Void, String> {
@@ -275,6 +257,71 @@ public class ViewAllCartsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             getCartDetails(s,cartId,status,date);
+        }
+    }
+
+    public class AllCartsRetrievalAPICall extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            try{
+                JSONObject userObj = new JSONObject();
+                userObj.put("userId",userId);
+
+                URL url = new URL(CARTS_URL);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.connect();
+
+                String input = userObj.toString();
+
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                writer.write(input);
+
+                writer.flush();
+                writer.close();
+                os.close();
+
+                int responseCode=conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                    StringBuffer sb = new StringBuffer("");
+                    String line="";
+                    while((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    return sb.toString();
+
+                } else {
+                    return new String("false : "+responseCode);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            setList(s);
         }
     }
 }

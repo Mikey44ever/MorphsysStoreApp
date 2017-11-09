@@ -41,6 +41,12 @@ public class Constants {
     public static final int ALL_CARTS_REQUEST_CODE=11;
     public static final int SPECIFIC_CART_ITEMS_REQUEST_CODE=12;
     public static final int SCAN_FOR_UPDATE_REQUEST_CODE=13;
+    public static final int MAIN_DRAWER_ACTIVITY_REQUEST_CODE=14;
+
+    public static final String TAG_HOME = "home";
+    public static final String TAG_SHOP = "shop";
+    public static final String TAG_CART_LIST = "cart list";
+    public static final String TAG_PRODUCT_LIST = "product list";
 
     public static final String BARCODE="BARCODE";
     public static final String PRODUCT_ID="PRODUCT_ID";
