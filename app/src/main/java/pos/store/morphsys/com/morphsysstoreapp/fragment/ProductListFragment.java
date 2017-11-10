@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -22,17 +21,25 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 
+import com.github.kimkevin.cachepot.CachePot;
+
 import java.util.ArrayList;
 
 import pos.store.morphsys.com.morphsysstoreapp.R;
+import pos.store.morphsys.com.morphsysstoreapp.activities.ViewCartActivity;
 import pos.store.morphsys.com.morphsysstoreapp.adapters.ProductListAdapter;
 import pos.store.morphsys.com.morphsysstoreapp.dbs.DBHelper;
+import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.product.ProductPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.product.ProductPOJOBuilder;
 
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CART_POJO_SERIAL_KEY;
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.PRICE;
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.PRODUCT_ID;
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.PRODUCT_NAME;
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.SCAN_FOR_UPDATE_REQUEST_CODE;
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.VIEW_CART_REQUEST_CODE;
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.showConstantDialog;
 
 public class ProductListFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -43,13 +50,23 @@ public class ProductListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    ListView productListView;
-    ArrayList<ProductPOJO> list = new ArrayList<ProductPOJO>();
-    ProductListAdapter customProductAdapter;
-    ImageButton imgBtnBack;
-    SearchView searchView;
-    SearchManager searchManager;
-    Toolbar toolbar;
+    private ListView productListView;
+    private ArrayList<ProductPOJO> list = new ArrayList<ProductPOJO>();
+    private ProductListAdapter customProductAdapter;
+    private SearchView searchView;
+    private String cartId;
+    private Bundle bundle;
+    private ArrayList<CartPOJO> cartList = new ArrayList<CartPOJO>();
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == VIEW_CART_REQUEST_CODE){
+            if (data != null){
+                customProductAdapter.setList((ArrayList<CartPOJO>) data.getSerializableExtra(CART_POJO_SERIAL_KEY));
+                updateArgumentsForCartList();
+            }
+        }else super.onActivityResult(requestCode, resultCode, data);
+    }
 
     public static ProductListFragment newInstance(String param1, String param2) {
         ProductListFragment fragment = new ProductListFragment();
@@ -63,6 +80,7 @@ public class ProductListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bundle = this.getArguments();
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -82,13 +100,9 @@ public class ProductListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                try{
-                    searchView = (SearchView) MenuItemCompat.getActionView(item);
-                    searchView.setIconified(false);
-                    searchView.setQueryHint("Search Item here...");
-                }catch (Exception e){
-                    Log.i(e.toString(),null);
-                }
+                searchView = (SearchView) MenuItemCompat.getActionView(item);
+                searchView.setIconified(false);
+                searchView.setQueryHint("Search Item here...");
 
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override
@@ -111,11 +125,36 @@ public class ProductListFragment extends Fragment {
         return false;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem pinMenuItem = menu.findItem(R.id.action_view);
+
+        if(pinMenuItem!=null){
+            pinMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    cartList = new ArrayList<CartPOJO>(customProductAdapter.getCartList());
+                    if(cartList.size()>0){
+                        bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
+
+                        Intent cartIntent = new Intent(getActivity().getApplicationContext(),ViewCartActivity.class);
+                        cartIntent.putExtras(bundle);
+                        cartIntent.putExtra("userId",bundle.getString("userId"));
+                        cartIntent.putExtra("cartId",cartId);
+                        startActivityForResult(cartIntent,VIEW_CART_REQUEST_CODE);
+                    }else{
+                        showConstantDialog(getActivity(),"PRODUCT LIST","CART IS EMPTY",getActivity().getIntent(),"SUCCESS",false);
+                    }
+
+                    return false;
+                }
+            });
+        }
+    }
+
     private void setListeners(View view){
-        final Bundle bundleFromActivity = this.getArguments();
-        Log.i(null,this.toString());
         productListView = (ListView) view.findViewById(R.id.productList);
-        imgBtnBack = (ImageButton) view.findViewById(R.id.imgBtnBack);
 
         ProductPOJO productPOJO = null;
         ProductPOJOBuilder pBuilder = null;
@@ -134,6 +173,36 @@ public class ProductListFragment extends Fragment {
         customProductAdapter = new ProductListAdapter(getActivity(),R.layout.product_custom_array_adapter, list);
         customProductAdapter.setActivity(getActivity());
         productListView.setAdapter(customProductAdapter);
+
+        getCartList();
+        updateArgumentsForCartList();
+    }
+
+    private void getCartList(){
+        try{
+            cartId =CachePot.getInstance().pop(String.class);
+            customProductAdapter.setList((ArrayList<CartPOJO>) CachePot.getInstance().pop(ArrayList.class));
+            updateArgumentsForCartList();
+        }catch (NullPointerException e){
+            cartId= "";
+            customProductAdapter.setList(new ArrayList<CartPOJO>());
+            Log.i(null,e.getMessage());
+        }catch (Exception e){
+            customProductAdapter.setList(new ArrayList<CartPOJO>());
+            Log.i(null,e.getMessage());
+        }
+    }
+
+    private void updateArgumentsForCartList(){
+        try{
+            CachePot.getInstance().clear();
+            CachePot.getInstance().push(cartId);
+            CachePot.getInstance().push(customProductAdapter.getCartList());
+        }catch (NullPointerException e){
+            Log.i(null,e.getMessage());
+        }catch (Exception e){
+            Log.i(null,e.getMessage());
+        }
     }
 
     private Cursor getAllData(){

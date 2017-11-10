@@ -9,39 +9,32 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.kimkevin.cachepot.CachePot;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import pos.store.morphsys.com.morphsysstoreapp.R;
 import pos.store.morphsys.com.morphsysstoreapp.activities.BarcodeCaptureActivity;
-import pos.store.morphsys.com.morphsysstoreapp.activities.MainActivity;
+import pos.store.morphsys.com.morphsysstoreapp.activities.ViewCartActivity;
 import pos.store.morphsys.com.morphsysstoreapp.dbs.DBHelper;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJOBuilder;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.product.ProductPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.product.ProductPOJOBuilder;
 
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.BARCODE;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.BARCODE_READER_REQUEST_CODE;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.PRICE;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.PRODUCT_ID;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.PRODUCT_NAME;
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.*;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ShopFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ShopFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ShopFragment extends Fragment {
     private static final String LOG_TAG = ShopFragment.class.getSimpleName();
     private static final String ARG_PARAM1 = "param1";
@@ -53,15 +46,17 @@ public class ShopFragment extends Fragment {
     private DBHelper mydb;
     private Barcode barcode;
     private Intent data;
-    private TextView txtProductName, txtProductPrice, txtQty, txtNoProduct;
-    private Button scanBarcodeButton, btnAddToCart, btnClear;
+    private TextView txtProductName, txtProductPrice, txtQty;
+    private Button scanBarcodeButton, btnAddToCart, btnClear,btnViewCart;
     private CartPOJOBuilder cBuilder;
     private ProductPOJOBuilder pBuilder;
     private ProductPOJO pPOJO;
     private CartPOJO cart;
     private ArrayList<CartPOJO> cartList = new ArrayList<CartPOJO>();
-    private boolean isFromUpdate;
+    private Boolean isFromUpdate = Boolean.FALSE;
     private String cartId,userId;
+    private Bundle bundle;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -76,6 +71,14 @@ public class ShopFragment extends Fragment {
                 }
             } else Log.e(LOG_TAG, String.format(getString(R.string.barcode_error_format),
                     CommonStatusCodes.getStatusCodeString(resultCode)));
+        } else if(requestCode == VIEW_CART_REQUEST_CODE){
+            if (data != null){
+                cartList = (ArrayList<CartPOJO>)data.getSerializableExtra(CART_POJO_SERIAL_KEY);
+                cartId = data.getStringExtra("cartId");
+            }
+
+            updateArgumentsForCartList();
+            setButtonEnabled("view");
         }else
             super.onActivityResult(requestCode, resultCode, data);
     }
@@ -140,9 +143,12 @@ public class ShopFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bundle = this.getArguments();
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -160,12 +166,9 @@ public class ShopFragment extends Fragment {
     }
 
     private void setListeners(View view){
-        final Bundle bundle = this.getArguments();
-
         txtProductName = (TextView) view.findViewById(R.id.txtProductName);
         txtProductPrice = (TextView) view.findViewById(R.id.txtProductPrice);
         txtQty = (TextView) view.findViewById(R.id.txtQty);
-        txtNoProduct = (TextView) view.findViewById(R.id.txtNoProduct);
         scanBarcodeButton = (Button) view.findViewById(R.id.scan_barcode_button);
         btnClear = (Button) view.findViewById(R.id.btnClear);
         btnAddToCart = (Button) view.findViewById(R.id.btnAddToCart);
@@ -173,7 +176,6 @@ public class ShopFragment extends Fragment {
         scanBarcodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                txtNoProduct.setText("");
                 Intent intent = new Intent(getActivity(), BarcodeCaptureActivity.class);
                 intent.putExtra("userId",bundle.getString("userId"));
                 intent.putExtra("cartId",bundle.getString("cartId"));
@@ -196,6 +198,9 @@ public class ShopFragment extends Fragment {
                 clear();
             }
         });
+
+        getCartList();
+        updateArgumentsForCartList();
     }
 
     private void addToCart(int qty){
@@ -213,10 +218,10 @@ public class ShopFragment extends Fragment {
                         .basePrice(pPOJO.getProductPrice())
                         .build();
                 cartList.add(cart);
-
+                updateArgumentsForCartList();
                 clear();
             }else{
-                txtNoProduct.setText("Please scan product first....!");
+                showConstantDialog(getActivity(),"SHOP","SCAN PRODUCT FIRST...",getActivity().getIntent(),"SUCCESS",false);
             }
         }catch(NumberFormatException e){
             addToCart(1);
@@ -224,10 +229,36 @@ public class ShopFragment extends Fragment {
         }
     }
 
+    private void getCartList(){
+        try{
+            cartId = CachePot.getInstance().pop(String.class);
+            isFromUpdate = CachePot.getInstance().pop(Boolean.class);
+            cartList.addAll((ArrayList<CartPOJO>) CachePot.getInstance().pop(ArrayList.class));
+            updateArgumentsForCartList();
+        }catch (NullPointerException e){
+            cartId = "";
+            isFromUpdate=Boolean.FALSE;
+            Log.i(null,e.getMessage());
+        }catch (Exception e){
+            Log.i(null,e.getMessage());
+        }
+    }
+
+    private void updateArgumentsForCartList(){
+        try{
+            CachePot.getInstance().clear();
+            CachePot.getInstance().push(cartId);
+            CachePot.getInstance().push(cartList);
+        }catch (NullPointerException e){
+            Log.i(null,e.getMessage());
+        }catch (Exception e){
+            Log.i(null,e.getMessage());
+        }
+    }
+
     private void clear(){
         cart = null;
         pPOJO=null;
-        txtNoProduct.setText("");
         txtProductPrice.setText("");
         txtProductName.setText("");
         txtQty.setText("");
@@ -239,6 +270,36 @@ public class ShopFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if(isFromUpdate!=null && isFromUpdate){
+            inflater.inflate(R.menu.view_cart, menu);
+        }
+        MenuItem viewCart = menu.findItem(R.id.action_view);
+
+        if(viewCart!=null){
+            viewCart.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if(cartList.size()>0){
+                        bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
+
+                        Intent cartIntent = new Intent(getActivity().getApplicationContext(),ViewCartActivity.class);
+                        cartIntent.putExtras(bundle);
+                        cartIntent.putExtra("userId",bundle.getString("userId"));
+                        cartIntent.putExtra("cartId",cartId);
+                        startActivityForResult(cartIntent,VIEW_CART_REQUEST_CODE);
+                    }else{
+                        showConstantDialog(getActivity(),"SHOP","CART IS EMPTY",getActivity().getIntent(),"SUCCESS",false);
+                    }
+                    return false;
+                }
+            });
+        }
+    }
+
 
     @Override
     public void onAttach(Context context) {

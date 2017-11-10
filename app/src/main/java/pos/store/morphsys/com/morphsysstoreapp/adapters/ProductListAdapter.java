@@ -34,12 +34,16 @@ public class ProductListAdapter extends ArrayAdapter{
     private CartPOJO cart;
     TextView txtQty;
     Activity activity;
-    ProductPOJO rowProduct;
 
     public ProductListAdapter(Context context, int textViewResourceId, ArrayList objects) {
         super(context, textViewResourceId, objects);
         list = objects;
         originalCopy = new ArrayList<>(objects);
+    }
+
+    public void setList(ArrayList<CartPOJO>list){
+        if(list!=null && list.size()>0)
+            this.cartList=list;
     }
 
     public void setActivity(Activity activity){
@@ -66,7 +70,7 @@ public class ProductListAdapter extends ArrayAdapter{
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rowProduct = (ProductPOJO)  hiddenRow.getTag();
+                final ProductPOJO rowProduct = (ProductPOJO)  hiddenRow.getTag();
                 View itemView = View.inflate(activity, R.layout.item_popup, null);
                 TextView txtItemName = (TextView) itemView.findViewById(R.id.txtItemName);
                 TextView txtPrice = (TextView) itemView.findViewById(R.id.txtPriceQty);
@@ -80,7 +84,7 @@ public class ProductListAdapter extends ArrayAdapter{
                 alert.setPositiveButton("ADD TO CART", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        addToCart();
+                        addToCart(rowProduct,txtQty);
                     }
                 });
                 alert.setNegativeButton("CLOSE",null);
@@ -116,7 +120,7 @@ public class ProductListAdapter extends ArrayAdapter{
         return cartList;
     }
 
-    private void addToCart(){
+    private void addToCart(ProductPOJO rowProduct,TextView txtQty){
         try{
             if(rowProduct!=null){
                 cBuilder = new CartPOJOBuilder();

@@ -54,6 +54,9 @@ public class MainDrawerActivity extends AppCompatActivity {
     private Handler mHandler;
     private int previousIndex = 0;
 
+    private String lName;
+    private String fName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,9 @@ public class MainDrawerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        lName = getIntent().getStringExtra("lName");
+        fName = getIntent().getStringExtra("fName");
 
         mHandler = new Handler();
 
@@ -97,8 +103,8 @@ public class MainDrawerActivity extends AppCompatActivity {
     }
 
     private void loadNavHeader() {
-        txtName.setText(getIntent().getStringExtra("fName")+" "+getIntent().getStringExtra("lName"));
-        txtWebsite.setText("www.androidhive.info");
+        txtName.setText(fName+" "+lName);
+        txtWebsite.setText("www.androidhive.info");//"www.androidhive.info"
 
         Glide.with(this).load(urlNavHeaderBg)
                 .crossFade()
@@ -220,12 +226,6 @@ public class MainDrawerActivity extends AppCompatActivity {
                 navigationView.getMenu().getItem(navItemIndex).setActionView(R.layout.menu_dot);
                 previousIndex = navItemIndex;
 
-                //Checking if the item is in checked state or not, if not make it in checked state
-                if (menuItem.isChecked()) {
-                    menuItem.setChecked(false);
-                } else {
-                    menuItem.setChecked(true);
-                }
                 menuItem.setChecked(true);
 
                 loadFragment();
@@ -279,11 +279,12 @@ public class MainDrawerActivity extends AppCompatActivity {
         if (navItemIndex == 0) {
             getMenuInflater().inflate(R.menu.main, menu);
         }
+        if (navItemIndex == 1) {
+            getMenuInflater().inflate(R.menu.view_cart, menu);
+        }
         if (navItemIndex == 2) {
             getMenuInflater().inflate(R.menu.search_menu, menu);
-        }
-        if (navItemIndex == 3) {
-            getMenuInflater().inflate(R.menu.notifications, menu);
+            getMenuInflater().inflate(R.menu.view_cart, menu);
         }
         return true;
     }

@@ -18,11 +18,6 @@
             android:id="@+id/nav_cart_list"
             android:icon="@drawable/cart_list"
             android:title="@string/nav_cart_list" />
-
-        <item
-            android:id="@+id/nav_view_cart"
-            android:icon="@drawable/ic_shopping_cart_black"
-            android:title="@string/nav_view_cart" />
     </group>
 
     <item android:title="Other">

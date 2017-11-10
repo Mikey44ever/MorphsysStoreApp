@@ -5,13 +5,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.github.kimkevin.cachepot.CachePot;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -46,6 +50,7 @@ import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CARTS_
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CART_POJO_SERIAL_KEY;
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CART_URL;
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.SPECIFIC_CART_ITEMS_REQUEST_CODE;
+import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.TAG_SHOP;
 
 public class CartListFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -63,8 +68,59 @@ public class CartListFragment extends Fragment {
     private CartPOJOBuilder cartPOJOBuilder;
     private CartPOJO cartPOJO;
     private CartListPOJO cartList;
+    private Bundle bundle;
+    private Intent data;
+    private ArrayList<CartPOJO> listToUpdate;
+    private Handler mHandler;
 
     private OnFragmentInteractionListener mListener;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        if(SPECIFIC_CART_ITEMS_REQUEST_CODE == requestCode){
+            if(data!=null){
+                this.data = data;
+                mHandler = new Handler();
+                listToUpdate = (ArrayList<CartPOJO>) data.getSerializableExtra(CART_POJO_SERIAL_KEY);
+                Log.i(null,data.toString());
+
+                updateArgumentsForCartList();
+
+                Runnable mPendingRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("userId",data.getStringExtra("userId"));
+
+                        Fragment fragment = new ShopFragment();
+                        fragment.setArguments(bundle);
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                        fragmentTransaction.replace(R.id.frame, fragment, TAG_SHOP);
+                        fragmentTransaction.commitAllowingStateLoss();
+                    }
+                };
+
+                if (mPendingRunnable != null)
+                    mHandler.post(mPendingRunnable);
+            }
+        }else
+            super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private void updateArgumentsForCartList(){
+        try{
+            CachePot.getInstance().clear();
+            CachePot.getInstance().push(data.getStringExtra("cartId"));
+            CachePot.getInstance().push(listToUpdate);
+            CachePot.getInstance().push(Boolean.TRUE);
+        }catch (NullPointerException e){
+            Log.i(null,e.getMessage());
+        }catch (Exception e){
+            Log.i(null,e.getMessage());
+        }
+    }
 
     public static CartListFragment newInstance(String param1, String param2) {
         CartListFragment fragment = new CartListFragment();
@@ -78,6 +134,8 @@ public class CartListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bundle = this.getArguments();
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);

@@ -76,9 +76,9 @@ public class CheckoutActivity extends AppCompatActivity{
 
                 JSONObject cartParams = new JSONObject();
                 cartParams.put("userId",userId);
-                cartParams.put("cartId",cartId);
+                if(!cartId.equals(""))
+                    cartParams.put("cartId",cartId);
                 cartParams.put("items",itemArr);
-                cartParams.put("cartId",cartId);
 
                 JSONObject checkoutParam = new JSONObject();
                 checkoutParam.put("cart",cartParams);

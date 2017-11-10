@@ -54,7 +54,7 @@
 
         <activity
             android:name=".activities.ViewSpecificCartActivity"
-            android:theme="@style/AppTheme"/>
+            android:label="@string/activity_title_specific_cart"/>
 
         <activity
             android:name=".activities.MainDrawerActivity"
@@ -68,7 +68,6 @@
             android:name=".activities.PrivacyPolicyActivity"
             android:label="@string/activity_title_privacy_policy"/>
 
-        <activity android:name=".activities.MainActivity"/>
     </application>
 
 </manifest>

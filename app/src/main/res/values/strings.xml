@@ -35,7 +35,6 @@
     <string name="nav_shop">Shop</string>
     <string name="nav_cart_list">Cart List</string>
     <string name="nav_product_list">Product List</string>
-    <string name="nav_view_cart">View Cart</string>
     <string name="nav_movies">View Cart</string>
     <string name="nav_about_us">About Us</string>
 
@@ -45,13 +44,14 @@
         <item>Shop</item>
         <item>Product List</item>
         <item>Cart List</item>
-        <item>View Cart</item>
     </string-array>
 
     <string name="activity_title_about_us">About Us</string>
+    <string name="activity_title_specific_cart">Cart Details</string>
     <string name="activity_title_privacy_policy">Privacy Policy</string>
     <string name="action_clear_all">Clear All</string>
     <string name="action_logout">Logout</string>
+    <string name="action_update_cart">Update Cart</string>
     <string name="action_mark_all_read">Mark All as Read</string>
     <string name="privacy_policy">Privacy Policy</string>
 </resources>

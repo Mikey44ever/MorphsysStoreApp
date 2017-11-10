@@ -3,7 +3,10 @@ package pos.store.morphsys.com.morphsysstoreapp.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import pos.store.morphsys.com.morphsysstoreapp.R;
+import pos.store.morphsys.com.morphsysstoreapp.fragment.ShopFragment;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
 
 import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.*;
@@ -34,13 +38,13 @@ import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.*;
 
 public class ViewCartActivity extends AppCompatActivity{
 
-    ListView cartView;
-    Button btnBackToMain, btnCheckout;
-    TextView txtTotal;
-    ArrayList<CartPOJO> cartList;
-    ArrayAdapter<CartPOJO> arrayAdapter;
+    private ListView cartView;
+    private Button btnBackToMain, btnCheckout;
+    private TextView txtTotal;
+    private ArrayList<CartPOJO> cartList;
+    private ArrayAdapter<CartPOJO> arrayAdapter;
     private String cartId;
-    private boolean isFromUpdate;
+    private Handler mHandler;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -58,7 +62,7 @@ public class ViewCartActivity extends AppCompatActivity{
         setContentView(R.layout.view_cart);
         cartList = (ArrayList<CartPOJO>)getIntent().getSerializableExtra(CART_POJO_SERIAL_KEY);
         cartId = getIntent().getStringExtra("cartId") != null ? getIntent().getStringExtra("cartId"):"";
-        isFromUpdate = getIntent().getBooleanExtra("isFromUpdate",false);
+        mHandler = new Handler();
 
         setListeners();
         generateList();
@@ -83,25 +87,14 @@ public class ViewCartActivity extends AppCompatActivity{
         btnBackToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isFromUpdate){
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
 
-                    Intent intent = new Intent();
-                    intent.putExtras(bundle);
-                    setResult(CommonStatusCodes.SUCCESS, intent);
-                    finish();
-                }else{
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
-
-                    Intent scanIntent = new Intent(getApplicationContext(),MainActivity.class);
-                    scanIntent.putExtra("isFromUpdate",isFromUpdate);
-                    scanIntent.putExtra("cartId",cartId);
-                    scanIntent.putExtra("userId",getIntent().getStringExtra("userId"));
-                    scanIntent.putExtras(bundle);
-                    startActivityForResult(scanIntent,SCAN_FOR_UPDATE_REQUEST_CODE);
-                }
+                Intent intent = new Intent();
+                intent.putExtras(bundle);
+                intent.putExtra("cartId",cartId);
+                setResult(CommonStatusCodes.SUCCESS, intent);
+                finish();
             }
         });
 
@@ -114,7 +107,6 @@ public class ViewCartActivity extends AppCompatActivity{
             Intent checkoutIntent = new Intent(getApplicationContext(),CheckoutActivity.class);
             checkoutIntent.putExtras(bundle);
             checkoutIntent.putExtra("userId",getIntent().getStringExtra("userId"));
-            checkoutIntent.putExtra("isFromUpdate",isFromUpdate);
             checkoutIntent.putExtra("cartId",cartId);
             startActivityForResult(checkoutIntent,CHECKOUT_REQUEST_CODE);
             }
