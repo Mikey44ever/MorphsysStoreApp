@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pos.store.morphsys.com.morphsysstoreapp.fragment.ShopFragment">
+    android:background="@drawable/form_bg"
+    tools:context="com.store.pos.fragment.ShopFragment">
 
     <include
         layout="@layout/fragment_shop_main"

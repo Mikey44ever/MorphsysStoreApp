@@ -12,8 +12,6 @@
         android:id="@+id/productList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:divider="#000"
-        android:dividerHeight="2dp"
         android:layout_marginStart="6dp"
         android:layout_marginEnd="6dp"
         tools:layout_constraintTop_creator="1"

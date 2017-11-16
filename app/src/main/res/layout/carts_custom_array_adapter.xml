@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_border">
 
     <TextView
         android:id="@+id/txtCartId"
@@ -20,16 +20,16 @@
         android:id="@+id/txtStatus"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="13dp"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/txtQty"
         android:layout_marginEnd="5dp"
+        android:layout_marginStart="13dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtQty"
+        app:layout_constraintLeft_toRightOf="@+id/txtCartId"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
         app:layout_constraintTop_toTopOf="@+id/txtCartId"
-        app:layout_constraintLeft_toRightOf="@+id/txtCartId" />
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <TextView
         android:id="@+id/txtQty"
