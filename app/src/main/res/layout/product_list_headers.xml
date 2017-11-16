@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
+
+    <TextView
+        android:id="@+id/txtItemNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginStart="2dp"
+        android:text="#"
+        android:textAlignment="viewStart"
+        android:textSize="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtItem"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1" />
+
+    <TextView
+        android:id="@+id/txtItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:inputType="textMultiLine"
+        android:text="ITEM"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        app:layout_constraintLeft_toRightOf="@+id/txtItemNumber"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintTop_creator="1" />
+
+    <TextView
+        android:id="@+id/txtCV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="CV"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtItem"
+        app:layout_constraintLeft_toRightOf="@+id/txtItem"
+        tools:layout_constraintBaseline_creator="1" />
+
+    <TextView
+        android:id="@+id/txtPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="PRICE"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtCV"
+        app:layout_constraintLeft_toRightOf="@+id/txtCV"
+        tools:layout_constraintBaseline_creator="1" />
+
+    <TextView
+        android:id="@+id/txtAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtQty"
+        app:layout_constraintLeft_toRightOf="@+id/txtQty"
+        app:layout_constraintTop_toTopOf="@+id/txtQty"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintTop_creator="1"
+        tools:text="AMOUNT" />
+
+    <TextView
+        android:id="@+id/txtQty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:color/transparent"
+        android:ems="10"
+        android:hint="0"
+        android:inputType="number"
+        android:text="PRICE"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtPrice"
+        app:layout_constraintLeft_toRightOf="@+id/txtPrice"
+        app:layout_constraintTop_toTopOf="@+id/txtPrice"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+</android.support.constraint.ConstraintLayout>

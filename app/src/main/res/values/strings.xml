@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Morphsys Mobile POS</string>
+    <string name="app_name">Reseller</string>
     <string name="scan_barcode_button">Scan barcode</string>
     <string name="no_barcode_captured">No barcode captured</string>
     <string name="barcode_error_format">"Error reading barcode: %1$s"</string>
@@ -29,6 +29,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="openDrawer">open_drawer</string>
     <string name="closeDrawer">close_drawer</string>
+    <string name="address">Address</string>
+    <string name="fb">Facebook</string>
+    <string name="brgy">Brgy</string>
+    <string name="city">City</string>
+    <string name="note">Note</string>
+    <string name="landmark">Landmarks</string>
 
     <!-- Navigation Drawer menu labels -->
     <string name="nav_home">Home</string>
@@ -46,6 +52,15 @@
         <item>Cart List</item>
     </string-array>
 
+    <string-array name="main_grid_array">
+        <item>Customers</item>
+        <item>COD Areas</item>
+        <item>COD Shipping Rates</item>
+        <item>Income</item>
+        <item>Orders</item>
+        <item>LBC/JRS Shipping Rates</item>
+    </string-array>
+
     <string name="activity_title_about_us">About Us</string>
     <string name="activity_title_specific_cart">Cart Details</string>
     <string name="activity_title_privacy_policy">Privacy Policy</string>
@@ -54,4 +69,13 @@
     <string name="action_update_cart">Update Cart</string>
     <string name="action_mark_all_read">Mark All as Read</string>
     <string name="privacy_policy">Privacy Policy</string>
+
+    <string name="cod_areas">COD Areas</string>
+    <string name="cod_shipping_rate">COD Shipping Rates</string>
+    <string name="lbc_jrc_shipping_rate">LBC/JRS Shipping Rates</string>
+    <string name="order_history">Order History</string>
+    <string name="add_customer">Add Customer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

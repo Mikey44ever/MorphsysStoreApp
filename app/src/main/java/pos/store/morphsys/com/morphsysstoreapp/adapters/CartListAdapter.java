@@ -2,14 +2,9 @@ package pos.store.morphsys.com.morphsysstoreapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +13,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import pos.store.morphsys.com.morphsysstoreapp.R;
+import com.store.R;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartListPOJO;
-import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
 
 public class CartListAdapter  extends ArrayAdapter {
 
@@ -49,9 +43,9 @@ public class CartListAdapter  extends ArrayAdapter {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         row = inflater.inflate(R.layout.carts_custom_array_adapter, null);
         txtCartId = (TextView) row.findViewById(R.id.txtCartId);
-        txtQty = (TextView) row.findViewById(R.id.txtQty);
+        txtQty = (TextView) row.findViewById(R.id.txtItemNumber);
         txtCost = (TextView) row.findViewById(R.id.txtCost);
-        txtDate = (TextView) row.findViewById(R.id.txtDate);
+        txtDate = (TextView) row.findViewById(R.id.txtItem);
         txtStatus= (TextView) row.findViewById(R.id.txtStatus);
 
         CartListPOJO cListPOJO = list.get(position);

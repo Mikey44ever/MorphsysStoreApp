@@ -22,18 +22,16 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
-import pos.store.morphsys.com.morphsysstoreapp.R;
-import pos.store.morphsys.com.morphsysstoreapp.activities.BarcodeCaptureActivity;
-import pos.store.morphsys.com.morphsysstoreapp.activities.ViewCartActivity;
-import pos.store.morphsys.com.morphsysstoreapp.dbs.DBHelper;
+import com.store.R;
+import com.store.activities.BarcodeCaptureActivity;
+import com.store.dbs.DBHelper;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJOBuilder;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.product.ProductPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.product.ProductPOJOBuilder;
 
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.*;
+import static com.store.constants.Constants.*;
 
 public class ShopFragment extends Fragment {
     private static final String LOG_TAG = ShopFragment.class.getSimpleName();
@@ -168,7 +166,7 @@ public class ShopFragment extends Fragment {
     private void setListeners(View view){
         txtProductName = (TextView) view.findViewById(R.id.txtProductName);
         txtProductPrice = (TextView) view.findViewById(R.id.txtProductPrice);
-        txtQty = (TextView) view.findViewById(R.id.txtQty);
+        txtQty = (TextView) view.findViewById(R.id.txtItemNumber);
         scanBarcodeButton = (Button) view.findViewById(R.id.scan_barcode_button);
         btnClear = (Button) view.findViewById(R.id.btnClear);
         btnAddToCart = (Button) view.findViewById(R.id.btnAddToCart);
@@ -283,17 +281,6 @@ public class ShopFragment extends Fragment {
             viewCart.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    if(cartList.size()>0){
-                        bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
-
-                        Intent cartIntent = new Intent(getActivity().getApplicationContext(),ViewCartActivity.class);
-                        cartIntent.putExtras(bundle);
-                        cartIntent.putExtra("userId",bundle.getString("userId"));
-                        cartIntent.putExtra("cartId",cartId);
-                        startActivityForResult(cartIntent,VIEW_CART_REQUEST_CODE);
-                    }else{
-                        showConstantDialog(getActivity(),"SHOP","CART IS EMPTY",getActivity().getIntent(),"SUCCESS",false);
-                    }
                     return false;
                 }
             });

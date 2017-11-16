@@ -7,10 +7,10 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-    <pos.store.morphsys.com.morphsysstoreapp.camera.CameraSourcePreview
+    <com.store.camera.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-    </pos.store.morphsys.com.morphsysstoreapp.camera.CameraSourcePreview>
+    </com.store.camera.CameraSourcePreview>
 </LinearLayout>

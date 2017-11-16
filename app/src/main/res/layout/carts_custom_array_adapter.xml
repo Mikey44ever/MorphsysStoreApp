@@ -24,7 +24,7 @@
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/txtQty"
+        app:layout_constraintBottom_toTopOf="@+id/txtItemNumber"
         android:layout_marginEnd="5dp"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintLeft_creator="1"
@@ -32,7 +32,7 @@
         app:layout_constraintLeft_toRightOf="@+id/txtCartId" />
 
     <TextView
-        android:id="@+id/txtQty"
+        android:id="@+id/txtItemNumber"
         android:layout_width="179dp"
         android:layout_height="20dp"
         android:layout_marginStart="32dp"
@@ -45,15 +45,15 @@
         android:id="@+id/txtCost"
         android:layout_width="0dp"
         android:layout_height="20dp"
-        app:layout_constraintLeft_toLeftOf="@+id/txtQty"
-        app:layout_constraintRight_toRightOf="@+id/txtQty"
-        app:layout_constraintTop_toBottomOf="@+id/txtQty"
+        app:layout_constraintLeft_toLeftOf="@+id/txtItemNumber"
+        app:layout_constraintRight_toRightOf="@+id/txtItemNumber"
+        app:layout_constraintTop_toBottomOf="@+id/txtItemNumber"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
 
     <TextView
-        android:id="@+id/txtDate"
+        android:id="@+id/txtItem"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:layout_marginEnd="16dp"

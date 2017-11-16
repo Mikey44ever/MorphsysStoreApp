@@ -38,19 +38,18 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import pos.store.morphsys.com.morphsysstoreapp.R;
-import pos.store.morphsys.com.morphsysstoreapp.activities.ViewSpecificCartActivity;
+import com.store.R;
 import pos.store.morphsys.com.morphsysstoreapp.adapters.CartListAdapter;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartListPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartListPOJOBuilder;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJOBuilder;
 
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CARTS_URL;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CART_POJO_SERIAL_KEY;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CART_URL;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.SPECIFIC_CART_ITEMS_REQUEST_CODE;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.TAG_SHOP;
+import static com.store.constants.Constants.CARTS_URL;
+import static com.store.constants.Constants.CART_POJO_SERIAL_KEY;
+import static com.store.constants.Constants.CART_URL;
+import static com.store.constants.Constants.SPECIFIC_CART_ITEMS_REQUEST_CODE;
+import static com.store.constants.Constants.TAG_SHOP;
 
 public class CartListFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -212,16 +211,6 @@ public class CartListFragment extends Fragment {
 
             cartItemList.add(cartPOJO);
         }
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(CART_POJO_SERIAL_KEY,cartItemList);
-        Intent cartItemsIntent = new Intent(getActivity().getApplicationContext(),ViewSpecificCartActivity.class);
-        cartItemsIntent.putExtras(bundle);
-        cartItemsIntent.putExtra("cartId",cartId);
-        cartItemsIntent.putExtra("status",status);
-        cartItemsIntent.putExtra("date",date);
-        cartItemsIntent.putExtra("userId",getActivity().getIntent().getStringExtra("userId"));
-        startActivityForResult(cartItemsIntent,SPECIFIC_CART_ITEMS_REQUEST_CODE);
     }
 
     public void onButtonPressed(Uri uri) {

@@ -1,6 +1,5 @@
 package pos.store.morphsys.com.morphsysstoreapp.fragment;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
 
@@ -25,21 +22,18 @@ import com.github.kimkevin.cachepot.CachePot;
 
 import java.util.ArrayList;
 
-import pos.store.morphsys.com.morphsysstoreapp.R;
-import pos.store.morphsys.com.morphsysstoreapp.activities.ViewCartActivity;
+import com.store.R;
 import pos.store.morphsys.com.morphsysstoreapp.adapters.ProductListAdapter;
-import pos.store.morphsys.com.morphsysstoreapp.dbs.DBHelper;
+import com.store.dbs.DBHelper;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.product.ProductPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.product.ProductPOJOBuilder;
 
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.CART_POJO_SERIAL_KEY;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.PRICE;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.PRODUCT_ID;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.PRODUCT_NAME;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.SCAN_FOR_UPDATE_REQUEST_CODE;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.VIEW_CART_REQUEST_CODE;
-import static pos.store.morphsys.com.morphsysstoreapp.constants.Constants.showConstantDialog;
+import static com.store.constants.Constants.CART_POJO_SERIAL_KEY;
+import static com.store.constants.Constants.PRICE;
+import static com.store.constants.Constants.PRODUCT_ID;
+import static com.store.constants.Constants.PRODUCT_NAME;
+import static com.store.constants.Constants.VIEW_CART_REQUEST_CODE;
 
 public class ProductListFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -135,18 +129,6 @@ public class ProductListFragment extends Fragment {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     cartList = new ArrayList<CartPOJO>(customProductAdapter.getCartList());
-                    if(cartList.size()>0){
-                        bundle.putSerializable(CART_POJO_SERIAL_KEY,cartList);
-
-                        Intent cartIntent = new Intent(getActivity().getApplicationContext(),ViewCartActivity.class);
-                        cartIntent.putExtras(bundle);
-                        cartIntent.putExtra("userId",bundle.getString("userId"));
-                        cartIntent.putExtra("cartId",cartId);
-                        startActivityForResult(cartIntent,VIEW_CART_REQUEST_CODE);
-                    }else{
-                        showConstantDialog(getActivity(),"PRODUCT LIST","CART IS EMPTY",getActivity().getIntent(),"SUCCESS",false);
-                    }
-
                     return false;
                 }
             });

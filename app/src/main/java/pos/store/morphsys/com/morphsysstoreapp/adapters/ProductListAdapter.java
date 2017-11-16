@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import pos.store.morphsys.com.morphsysstoreapp.R;
+import com.store.R;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJO;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.cart.CartPOJOBuilder;
 import pos.store.morphsys.com.morphsysstoreapp.pojo.product.ProductPOJO;
@@ -74,7 +74,7 @@ public class ProductListAdapter extends ArrayAdapter{
                 View itemView = View.inflate(activity, R.layout.item_popup, null);
                 TextView txtItemName = (TextView) itemView.findViewById(R.id.txtItemName);
                 TextView txtPrice = (TextView) itemView.findViewById(R.id.txtPriceQty);
-                txtQty = (TextView) itemView.findViewById(R.id.txtQty);
+                txtQty = (TextView) itemView.findViewById(R.id.txtItemNumber);
 
                 txtItemName.setText(rowProduct.getProductName());
                 txtPrice.setText(String.valueOf(rowProduct.getProductPrice()));
