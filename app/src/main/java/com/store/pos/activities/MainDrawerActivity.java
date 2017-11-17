@@ -275,9 +275,7 @@ public class MainDrawerActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         // show menu only when home fragment is selected
-        if (navItemIndex == 0) {
-            getMenuInflater().inflate(R.menu.main, menu);
-        }
+        getMenuInflater().inflate(R.menu.main, menu);
         if (navItemIndex == 1) {
             getMenuInflater().inflate(R.menu.view_cart, menu);
         }
