@@ -54,4 +54,7 @@
     <string name="action_update_cart">Update Cart</string>
     <string name="action_mark_all_read">Mark All as Read</string>
     <string name="privacy_policy">Privacy Policy</string>
+
+    <string name="registration_title">REGISTRATION</string>
+    <string name="view_cart_title">CART ITEMS</string>
 </resources>

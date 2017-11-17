@@ -138,7 +138,7 @@ public class MainDrawerActivity extends AppCompatActivity {
                 Fragment fragment = getFragment();
                 fragment.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                fragmentTransaction.setCustomAnimations(android.R.anim.slide_out_right, android.R.anim.slide_out_right);
                 fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
                 fragmentTransaction.commitAllowingStateLoss();
             }

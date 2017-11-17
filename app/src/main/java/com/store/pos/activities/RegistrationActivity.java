@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.store.pos.R;
 import com.store.pos.pojo.registration.RegistrationPOJO;
 import com.store.pos.pojo.registration.RegistrationPOJOBuilder;
 
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -67,9 +70,22 @@ public class RegistrationActivity extends AppCompatActivity {
     RegistrationPOJO rPOJO;
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return true;
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.registration_title);
 
         setListeners();
         instantiateObjects();
