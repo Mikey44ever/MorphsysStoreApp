@@ -71,7 +71,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
 
-        Intent intent = new Intent(getApplicationContext(), MainDrawerActivity.class);
+        Intent intent = new Intent(getApplicationContext(),OCRTestActivity.class);
+        startActivityForResult(intent,33);
+        /*Intent intent = new Intent(getApplicationContext(), MainDrawerActivity.class);
         mainIntent= intent;
 
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
@@ -91,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mydb = new DBHelper(this);
 
-        setListeners();
+        setListeners();*/
     }
 
     private void initializeDB(boolean doRefresh,String productJsonString){

@@ -4,7 +4,7 @@
     package="com.store.pos">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera2" />
@@ -13,61 +13,54 @@
     <meta-data
         android:name="com.google.android.gms.vision.DEPENDENCIES"
         android:value="barcode,face" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".activities.LoginActivity"
+        <activity
+            android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.BarcodeCaptureActivity"
-            android:theme="@style/AppTheme"/>
-
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.DBCreateActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
-
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".activities.RegistrationActivity"
-            android:theme="@style/AppTheme"/>
-
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ProductsRetrievalActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
-
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".activities.ViewCartActivity"
-            android:theme="@style/AppTheme"/>
-
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.CheckoutActivity"
-            android:theme="@style/AppTheme"/>
-
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ViewSpecificCartActivity"
-            android:label="@string/activity_title_specific_cart"/>
-
+            android:label="@string/activity_title_specific_cart" />
         <activity
             android:name=".activities.MainDrawerActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.AboutUsActivity"
             android:label="@string/activity_title_about_us" />
         <activity
             android:name=".activities.PrivacyPolicyActivity"
-            android:label="@string/activity_title_privacy_policy"/>
-
+            android:label="@string/activity_title_privacy_policy" />
+        <activity android:name=".activities.OCRTestActivity"></activity>
     </application>
 
 </manifest>
